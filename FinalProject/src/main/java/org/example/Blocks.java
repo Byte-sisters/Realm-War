@@ -1,4 +1,4 @@
 package org.example;
 
-public   class Blocks {
+public abstract class Blocks {
 }
