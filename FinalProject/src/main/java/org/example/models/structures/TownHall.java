@@ -1,4 +1,4 @@
-package org.example;
+package org.example.models.structures;
 
 public class TownHall extends Structures {
 }
