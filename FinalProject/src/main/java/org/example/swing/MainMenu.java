@@ -52,6 +52,8 @@ public class MainMenu extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "New Game":
+                NewGameWindow window = new NewGameWindow();
+                setVisible(false);
                 break;
 
                 case "Continue":
@@ -64,5 +66,8 @@ public class MainMenu extends JFrame implements ActionListener {
                         default:
         }
 
+    }
+    public static void main(String[] args) {
+        new MainMenu();
     }
 }
