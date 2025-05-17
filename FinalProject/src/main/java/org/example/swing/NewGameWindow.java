@@ -1,5 +1,7 @@
 package org.example.swing;
 
+import org.example.controller.Game;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -68,15 +70,23 @@ public class NewGameWindow extends JFrame implements ActionListener {
 
             case "Single Player":
                 numberOfPlayers=1;
+                setVisible(false);
+                new Game(numberOfPlayers);
                 break;
                 case "Double Player":
                     numberOfPlayers=2;
+                    setVisible(false);
+                    new Game(numberOfPlayers);
                     break;
                     case "Three Player":
                         numberOfPlayers=3;
+                        setVisible(false);
+                        new Game(numberOfPlayers);
                         break;
                         case "Fourth Player":
                             numberOfPlayers=4;
+                            setVisible(false);
+                            new Game(numberOfPlayers);
                             break;
                             case "Back":
                                 this.setVisible(false);
