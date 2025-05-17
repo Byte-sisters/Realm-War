@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9699ce39-6659-4159-891f-65f18b56db80" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="9699ce39-6659-4159-891f-65f18b56db80" name="Changes" comment="Unit constructor">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FinalProject/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FinalProject/src/main/java/org/example/models/units/Knight.java" beforeDir="false" afterPath="$PROJECT_DIR$/FinalProject/src/main/java/org/example/models/units/Knight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FinalProject/src/main/java/org/example/models/units/Peasant.java" beforeDir="false" afterPath="$PROJECT_DIR$/FinalProject/src/main/java/org/example/models/units/Peasant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FinalProject/src/main/java/org/example/models/units/Spearman.java" beforeDir="false" afterPath="$PROJECT_DIR$/FinalProject/src/main/java/org/example/models/units/Spearman.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FinalProject/src/main/java/org/example/models/units/Swordman.java" beforeDir="false" afterPath="$PROJECT_DIR$/FinalProject/src/main/java/org/example/models/units/Swordman.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FinalProject/src/main/java/org/example/models/units/Units.java" beforeDir="false" afterPath="$PROJECT_DIR$/FinalProject/src/main/java/org/example/models/units/Units.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +42,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/PR/Desktop/Realm-War",
+    "last_opened_file_path": "C:/Users/PR/Desktop/Realm-War/FinalProject",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -79,11 +72,24 @@
       <workItem from="1745591401515" duration="22000" />
       <workItem from="1747396301260" duration="111000" />
       <workItem from="1747396464301" duration="445000" />
-      <workItem from="1747465124590" duration="464000" />
+      <workItem from="1747465124590" duration="2059000" />
     </task>
+    <task id="LOCAL-00001" summary="Unit constructor">
+      <option name="closed" value="true" />
+      <created>1747465632382</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1747465632382</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Unit constructor" />
+    <option name="LAST_COMMIT_MESSAGE" value="Unit constructor" />
   </component>
 </project>

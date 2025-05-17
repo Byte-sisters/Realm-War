@@ -1,5 +1,7 @@
 package org.example.models.units;
 
 public class Knight extends Units {
-    super();
+    public Knight() {
+        super();
+    }
 }
