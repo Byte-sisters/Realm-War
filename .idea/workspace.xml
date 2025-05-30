@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="9699ce39-6659-4159-891f-65f18b56db80" name="Changes" comment="Unit constructor">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FinalProject/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/FinalProject/src/main/java/org/example/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +43,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/PR/Desktop/Realm-War/FinalProject",
+    "last_opened_file_path": "C:/Users/PR/Desktop/JavaSwingExercise/part2",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -73,6 +74,11 @@
       <workItem from="1747396301260" duration="111000" />
       <workItem from="1747396464301" duration="445000" />
       <workItem from="1747465124590" duration="2059000" />
+      <workItem from="1748338318042" duration="26000" />
+      <workItem from="1748338393016" duration="1263000" />
+      <workItem from="1748345695789" duration="3186000" />
+      <workItem from="1748353166941" duration="603000" />
+      <workItem from="1748376664257" duration="14000" />
     </task>
     <task id="LOCAL-00001" summary="Unit constructor">
       <option name="closed" value="true" />
