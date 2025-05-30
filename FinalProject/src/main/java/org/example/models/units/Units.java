@@ -8,6 +8,7 @@ public abstract class Units {
     int payment;
     int ration;
     int unitSpace;
+    int price;
 
     public Units() {
 
@@ -18,6 +19,10 @@ public abstract class Units {
         this.payment = 0;
         this.ration = 0;
         this.unitSpace = 0;
+        this.price = 10;
+    }
 
+    public int getPrice(){
+        return this.price;
     }
 }
