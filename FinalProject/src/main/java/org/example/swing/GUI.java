@@ -8,6 +8,7 @@ import org.example.models.units.Swordman;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GUI extends JFrame{
     private JPanel currentPanel;
@@ -174,8 +175,10 @@ public class GUI extends JFrame{
         topPanel.add(goldLabel);
 
 
-        JPanel gamePanel=new JPanel();
+        gamePanel gamePanel=new gamePanel(player);
         gamePanel.setSize(300,300);
+
+
 
         JPanel ButtonPanel = new JPanel(new BorderLayout());
 
@@ -203,8 +206,56 @@ public class GUI extends JFrame{
         revalidate();
         repaint();
     }
+    public class gamePanel extends JPanel {
+         int rows = 12;
+         int cols = 12;
+        private JButton[][] buttons = new JButton[rows][cols];
+        private ImageIcon voidIcon;
+        private ImageIcon emptyIcon;
+        private ImageIcon forestIcon;
+        private ImageIcon townHallIcon;
 
-    public void GameControl(){
+            public gamePanel(Player player) {
+                voidIcon = new ImageIcon("Void.jpg");
+                emptyIcon = new ImageIcon("Empty.png");
+                forestIcon = new ImageIcon("Forest.png");
+                townHallIcon = new ImageIcon("TownHall.jpg");
+
+                this.setLayout(new GridLayout(rows, cols));
+
+                for (int row = 0; row < rows; row++) {
+                    for (int col = 0; col < cols; col++) {
+                        JButton button = new JButton();
+                        if (row == 0 || col == 0 || row == rows - 1 || col == cols - 1) {
+                            button.setIcon(voidIcon);
+                            button.setEnabled(false);
+                        } else {
+                            button.setIcon(emptyIcon);
+                        }
+                        buttons[row][col] = button;
+                        this.add(button);
+                    }
+                }
+
+                int count = 0;
+                Random rand = new Random();
+                while (count < 10) {
+                    int row = rand.nextInt(rows - 2) + 1;
+                    int col = rand.nextInt(cols - 2) + 1;
+
+                    if (!buttons[row][col].getIcon().equals(forestIcon)) {
+                        buttons[row][col].setIcon(forestIcon);
+                        count++;
+                    }
+                }
+
+                int centerRow = rows / 2;
+                int centerCol = cols / 2;
+                buttons[centerRow][centerCol].setIcon(townHallIcon);
+            }
+        }
+
+        public void GameControl(){
         players.clear();
 
         for (int i = 0; i < numberOfPlayers; i++) {
@@ -219,5 +270,7 @@ public class GUI extends JFrame{
 
         new Game(this, players);
     }
+
+
 
 }
