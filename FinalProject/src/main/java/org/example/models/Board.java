@@ -1,4 +1,9 @@
 package org.example.models;
 
-public class Board {
+import javax.swing.*;
+
+public class Board{
+
 }
+
+
