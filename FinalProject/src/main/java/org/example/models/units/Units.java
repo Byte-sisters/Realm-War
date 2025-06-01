@@ -16,7 +16,7 @@ public abstract class Units {
         this.movementRange = 0;
         this.attackPower=0;
         this.attackRange=0;
-        this.payment = 0;
+        this.payment = 5;
         this.ration = 0;
         this.unitSpace = 0;
         this.price = 10;
@@ -25,4 +25,5 @@ public abstract class Units {
     public int getPrice(){
         return this.price;
     }
+    public int getPayment(){ return this.payment; }
 }

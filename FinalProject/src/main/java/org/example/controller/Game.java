@@ -27,6 +27,7 @@ public class Game {
             if (players.isEmpty()) return;
         } else {
             gui.ShowGameBoardWindow(currentPlayer);
+            currentPlayer.changePairTurn();
         }
 
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
