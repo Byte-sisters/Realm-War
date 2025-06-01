@@ -15,6 +15,7 @@ public class GUI extends JFrame{
     int numberOfPlayers;
     ArrayList<Player> players = new ArrayList<Player>();
     Game game;
+    gamePanel gamePanel;
 
     public GUI() {
         setTitle("RealM War");
@@ -109,18 +110,22 @@ public class GUI extends JFrame{
 
         singleButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 1;
+            gamePanel = new gamePanel();
             GameControl();
         });
         doubleButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 2;
+            gamePanel = new gamePanel();
             GameControl();
         });
         threeButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 3;
+            gamePanel = new gamePanel();
             GameControl();
         });
         fourthButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 4;
+            gamePanel = new gamePanel();
             GameControl();
         });
         backButton.addActionListener(actionPerformed -> {
@@ -174,8 +179,6 @@ public class GUI extends JFrame{
         topPanel.add(foodLabel);
         topPanel.add(goldLabel);
 
-
-        gamePanel gamePanel=new gamePanel(player);
         gamePanel.setSize(300,300);
 
 
@@ -225,7 +228,7 @@ public class GUI extends JFrame{
         private ImageIcon forestIcon;
         private ImageIcon townHallIcon;
 
-            public gamePanel(Player player) {
+            public gamePanel() {
                 voidIcon = new ImageIcon("Void.jpg");
                 emptyIcon = new ImageIcon("Empty.png");
                 forestIcon = new ImageIcon("Forest.png");
@@ -246,6 +249,30 @@ public class GUI extends JFrame{
                         this.add(button);
                     }
                 }
+                System.out.println(numberOfPlayers);
+                switch(numberOfPlayers) {
+
+                    case 1, 2:
+                        buttons[rows - 2][1].setIcon(townHallIcon);
+                        buttons[1][cols -2].setIcon(townHallIcon);
+                        break;
+
+                    case 3:
+                        buttons[rows - 2][1].setIcon(townHallIcon);
+                        buttons[1][cols -2].setIcon(townHallIcon);
+                        buttons[rows - 2][cols-2].setIcon(townHallIcon);
+                        break;
+
+                    case 4:
+                        buttons[rows - 2][1].setIcon(townHallIcon);
+                        buttons[1][cols -2].setIcon(townHallIcon);
+                        buttons[rows - 2][cols-2].setIcon(townHallIcon);
+                        buttons[1][1].setIcon(townHallIcon);
+                        break;
+
+                    default:
+
+                }
 
                 int count = 0;
                 Random rand = new Random();
@@ -253,15 +280,13 @@ public class GUI extends JFrame{
                     int row = rand.nextInt(rows - 2) + 1;
                     int col = rand.nextInt(cols - 2) + 1;
 
-                    if (!buttons[row][col].getIcon().equals(forestIcon)) {
+                    if (!(buttons[row][col].getIcon().equals(forestIcon))|| buttons[row][col].getIcon().equals(voidIcon) || buttons[row][col].getIcon().equals(townHallIcon)) {
                         buttons[row][col].setIcon(forestIcon);
                         count++;
                     }
                 }
 
-                int centerRow = rows / 2;
-                int centerCol = cols / 2;
-                buttons[centerRow][centerCol].setIcon(townHallIcon);
+
             }
         }
 
