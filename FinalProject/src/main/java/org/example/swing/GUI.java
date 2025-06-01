@@ -14,7 +14,7 @@ public class GUI extends JFrame{
     private JPanel currentPanel;
     int numberOfPlayers;
     ArrayList<Player> players = new ArrayList<Player>();
-    String playerName;
+    Game game;
 
     public GUI() {
         setTitle("RealM War");
@@ -182,6 +182,10 @@ public class GUI extends JFrame{
 
         JPanel ButtonPanel = new JPanel(new BorderLayout());
 
+        JPanel nextTurnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5,0));
+        JButton nextTurn = new JButton("Next");
+        nextTurnPanel.add(nextTurn);
+
         JPanel StructurePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         StructurePanel.add(farm);
         StructurePanel.add(barrack);
@@ -196,16 +200,22 @@ public class GUI extends JFrame{
 
         ButtonPanel.add(StructurePanel, BorderLayout.WEST);
         ButtonPanel.add(UnitPanel, BorderLayout.EAST);
+        ButtonPanel.add(nextTurnPanel, BorderLayout.CENTER);
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(gamePanel, BorderLayout.CENTER);
         mainPanel.add(ButtonPanel, BorderLayout.SOUTH);
+
+        nextTurn.addActionListener(e -> {
+            game.nextTurn();
+        });
 
         currentPanel.add(mainPanel, BorderLayout.CENTER);
 
         revalidate();
         repaint();
     }
+
     public class gamePanel extends JPanel {
          int rows = 12;
          int cols = 12;
@@ -268,7 +278,7 @@ public class GUI extends JFrame{
             }
         }
 
-        new Game(this, players);
+        game = new Game(this, players);
     }
 
 
