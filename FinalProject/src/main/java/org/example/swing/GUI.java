@@ -9,6 +9,7 @@ import org.example.models.units.Swordman;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -19,6 +20,10 @@ public class GUI extends JFrame{
     Game game;
     Board board;
     Structures selectedStructure;
+    private JLabel goldLabel;
+    private JLabel foodLabel;
+    private JLabel playerNameLabel;
+
 
     public GUI() {
         setTitle("RealM War");
@@ -113,22 +118,22 @@ public class GUI extends JFrame{
 
         singleButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 1;
-            board = new Board(numberOfPlayers);
+            board = new Board(numberOfPlayers,this);
             GameControl();
         });
         doubleButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 2;
-            board = new Board(numberOfPlayers);
+            board = new Board(numberOfPlayers,this);
             GameControl();
         });
         threeButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 3;
-            board = new Board(numberOfPlayers);
+            board = new Board(numberOfPlayers,this);
             GameControl();
         });
         fourthButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 4;
-            board = new Board(numberOfPlayers);
+            board = new Board(numberOfPlayers,this);
             GameControl();
         });
         backButton.addActionListener(actionPerformed -> {
@@ -150,7 +155,7 @@ public class GUI extends JFrame{
         JButton farm = new JButton(farmIcon);
         farm.addActionListener(actionPerformed -> {
             selectedStructure = new Farm();
-          //  board.update();
+
         });
         farm.setPreferredSize(new Dimension(50, 50));
         ImageIcon barrackIcon = new ImageIcon("img/Barrack.jpg");
@@ -188,12 +193,14 @@ public class GUI extends JFrame{
 
         JPanel topPanel=new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER,50,0));
-        JLabel playerNameLabel = new JLabel("Player Name: " + player.getName());
-        JLabel foodLabel = new JLabel("Food: " + player.getGold());
-        JLabel goldLabel = new JLabel("Gold: " + player.getFoodSupply());
+        playerNameLabel = new JLabel("Player Name: " + player.getName());
+        foodLabel = new JLabel("Food: " + player.getFoodSupply());
+        goldLabel = new JLabel("Gold: " + player.getGold());
         topPanel.add(playerNameLabel);
         topPanel.add(foodLabel);
         topPanel.add(goldLabel);
+
+
 
         board.setSize(300,300);
 
@@ -227,13 +234,40 @@ public class GUI extends JFrame{
 
         nextTurn.addActionListener(e -> {
             game.nextTurn();
+
         });
+        for (int i = 0; i < board.buttons.length; i++) {
+            for (int j = 0; j < board.buttons[i].length; j++) {
+                final int row = i;
+                final int col = j;
+
+                for (ActionListener al : board.buttons[i][j].getActionListeners()) {
+                    board.buttons[i][j].removeActionListener(al);
+                }
+
+                board.buttons[i][j].addActionListener(e -> {
+                    if (selectedStructure == null) {
+                        JOptionPane.showMessageDialog(GUI.this, "please choose a structure", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    board.update(player, players, row, col, selectedStructure);
+                    updateGoldLabel(player);
+                });
+            }
+        }
+
+
 
         currentPanel.add(mainPanel, BorderLayout.CENTER);
 
         revalidate();
         repaint();
     }
+    public void updateGoldLabel(Player player) {
+        goldLabel.setText("Gold: " + player.getGold());
+        foodLabel.setText("Food: " + player.getFoodSupply());
+    }
+
 
     public void GameControl(){
         players.clear();

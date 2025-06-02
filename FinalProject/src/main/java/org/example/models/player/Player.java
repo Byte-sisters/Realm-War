@@ -85,21 +85,39 @@ public class Player {
     }
 
     public int getFoodSupply() {return foodSupply;}
+    public void setGold(int gold) {
+        this.gold = gold;
+    }
+
+    public ArrayList<Farm> getFarms() {
+        return farms;
+    }
+    public ArrayList<Market> getMarkets() {
+        return markets;
+    }
+    public ArrayList<Tower> getTowers() {
+        return towers;
+    }
+    public ArrayList<Barrack> getBarracks() {
+        return barracks;
+    }
+
 
 
     public boolean HaveMoneyToPayForBarrack(Barrack barrack) {
-        return getGold()-barrack.getPrice()>0 && canMakeBarracks();
+        return getGold() >= barrack.getPrice() && canMakeBarracks();
     }
 
     public boolean HaveMoneyToPayForFarm(Farm farm) {
-        return getGold()-farm.getPrice()>0 && canMakeFarms();
+        return getGold() >= farm.getPrice() && canMakeFarms();
     }
     public boolean HaveMoneyToPayForMarket(Market market) {
-        return getGold()-market.getPrice()>0 && canMakeMarkets();
+        return getGold() >= market.getPrice() && canMakeMarkets();
     }
-     public boolean HaveMoneyToPayForTower(Tower tower) {
-        return getGold()-tower.getPrice()>0 && canMakeTowers();
-     }
+
+    public boolean HaveMoneyToPayForTower(Tower tower) {
+        return getGold() >= tower.getPrice() && canMakeTowers();
+    }
 
      public boolean HaveMoneyToPayForPeasant(Peasant peasant) {
          return getGold()-peasant.getPrice()>0 && canMakePeasants() ;
