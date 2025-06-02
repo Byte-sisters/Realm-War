@@ -3,6 +3,7 @@ package org.example.swing;
 import org.example.controller.Game;
 import org.example.models.Board;
 import org.example.models.player.Player;
+import org.example.models.structures.*;
 import org.example.models.units.Knight;
 import org.example.models.units.Swordman;
 
@@ -17,6 +18,7 @@ public class GUI extends JFrame{
     ArrayList<Player> players = new ArrayList<Player>();
     Game game;
     Board board;
+    Structures selectedStructure;
 
     public GUI() {
         setTitle("RealM War");
@@ -144,17 +146,30 @@ public class GUI extends JFrame{
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        ImageIcon farmIcon = new ImageIcon("img/10751558.png");
+        ImageIcon farmIcon = new ImageIcon("img/Farm.png");
         JButton farm = new JButton(farmIcon);
+        farm.addActionListener(actionPerformed -> {
+            selectedStructure = new Farm();
+          //  board.update();
+        });
         farm.setPreferredSize(new Dimension(50, 50));
-        ImageIcon barrackIcon = new ImageIcon("img/10751558.png");
+        ImageIcon barrackIcon = new ImageIcon("img/Barrack.jpg");
         JButton barrack = new JButton(barrackIcon);
+        barrack.addActionListener(actionPerformed -> {
+            selectedStructure = new Barrack();
+        });
         barrack.setPreferredSize(new Dimension(50, 50));
-        ImageIcon marketIcon = new ImageIcon("img/10751558.png");
+        ImageIcon marketIcon = new ImageIcon("img/Market.jpg");
         JButton market = new JButton(marketIcon);
+        market.addActionListener(actionPerformed -> {
+            selectedStructure = new Market();
+        });
         market.setPreferredSize(new Dimension(50, 50));
-        ImageIcon towerIcon = new ImageIcon("img/10751558.png");
+        ImageIcon towerIcon = new ImageIcon("img/Tower.jpg");
         JButton tower = new JButton(towerIcon);
+        tower.addActionListener(actionPerformed -> {
+            selectedStructure = new Tower();
+        });
         tower.setPreferredSize(new Dimension(50, 50));
 
         ImageIcon peasantIcon = new ImageIcon("img/peasent.jpeg");
@@ -235,7 +250,6 @@ public class GUI extends JFrame{
 
         game = new Game(this, players);
     }
-
 
 
 }

@@ -1,9 +1,11 @@
 package org.example.models;
 
 import org.example.models.player.Player;
+import org.example.models.structures.Structures;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Board extends JPanel {
@@ -23,7 +25,7 @@ public class Board extends JPanel {
         voidIcon = new ImageIcon("img/Void.jpg");
         emptyIcon = new ImageIcon("img/Empty.jpg");
         forestIcon = new ImageIcon("img/Forest.png");
-        townHallIcon = new ImageIcon("img/TownHall.jpg");
+        townHallIcon = new ImageIcon("img/TownHall.png");
         player1 = new ImageIcon("img/player1.png");
         player2 = new ImageIcon("img/player2.jpg");
         player3 = new ImageIcon("img/player3.jpg");
@@ -40,6 +42,8 @@ public class Board extends JPanel {
                 } else {
                     button.setIcon(emptyIcon);
                 }
+
+
                 buttons[row][col] = button;
                 this.add(button);
             }
@@ -123,18 +127,28 @@ public class Board extends JPanel {
 
     }
 
-    public void update(Player player) {
-        if(!canPlaceStructure()){
-            JOptionPane.showMessageDialog(this, "You can't place a structure!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+/*   public void update(Player player, ArrayList<Player> players , int i , int j, Structures selectedStructure) {
+
+        int finalRow= i;
+        int finalCol= j;
+        buttons[finalRow][finalCol].addActionListener(e->{
+            if(!canPlaceStructure(player, players , i , j)) {
+                JOptionPane.showMessageDialog(this, "You can't place a structure!", "Error", JOptionPane.ERROR_MESSAGE);
+            }else{
+                buttons[finalRow][finalCol].setIcon(townHallIcon);
+            }
+        });
+
     }
 
-    public boolean canPlaceStructure() {
-        if(){
+   public boolean canPlaceStructure(Player player, ArrayList<Player> players, int i , int j) {
+        int playerIndex = players.indexOf(player);
+        String playerIcon = "player" + playerIndex;
+        if(buttons[i][j].getIcon().equals(playerIcon)){
             return true;
         }
         return false;
-    }
+    } */
 }
 
 
