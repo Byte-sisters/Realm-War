@@ -1,6 +1,7 @@
 package org.example.swing;
 
 import org.example.controller.Game;
+import org.example.models.Board;
 import org.example.models.player.Player;
 import org.example.models.units.Knight;
 import org.example.models.units.Swordman;
@@ -15,7 +16,7 @@ public class GUI extends JFrame{
     int numberOfPlayers;
     ArrayList<Player> players = new ArrayList<Player>();
     Game game;
-    gamePanel gamePanel;
+    Board board;
 
     public GUI() {
         setTitle("RealM War");
@@ -110,22 +111,22 @@ public class GUI extends JFrame{
 
         singleButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 1;
-            gamePanel = new gamePanel();
+            board = new Board(numberOfPlayers);
             GameControl();
         });
         doubleButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 2;
-            gamePanel = new gamePanel();
+            board = new Board(numberOfPlayers);
             GameControl();
         });
         threeButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 3;
-            gamePanel = new gamePanel();
+            board = new Board(numberOfPlayers);
             GameControl();
         });
         fourthButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 4;
-            gamePanel = new gamePanel();
+            board = new Board(numberOfPlayers);
             GameControl();
         });
         backButton.addActionListener(actionPerformed -> {
@@ -179,7 +180,7 @@ public class GUI extends JFrame{
         topPanel.add(foodLabel);
         topPanel.add(goldLabel);
 
-        gamePanel.setSize(300,300);
+        board.setSize(300,300);
 
 
 
@@ -206,7 +207,7 @@ public class GUI extends JFrame{
         ButtonPanel.add(nextTurnPanel, BorderLayout.CENTER);
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
-        mainPanel.add(gamePanel, BorderLayout.CENTER);
+        mainPanel.add(board, BorderLayout.CENTER);
         mainPanel.add(ButtonPanel, BorderLayout.SOUTH);
 
         nextTurn.addActionListener(e -> {
@@ -219,77 +220,7 @@ public class GUI extends JFrame{
         repaint();
     }
 
-    public class gamePanel extends JPanel {
-         int rows = 12;
-         int cols = 12;
-        private JButton[][] buttons = new JButton[rows][cols];
-        private ImageIcon voidIcon;
-        private ImageIcon emptyIcon;
-        private ImageIcon forestIcon;
-        private ImageIcon townHallIcon;
-
-            public gamePanel() {
-                voidIcon = new ImageIcon("img/Void.jpg");
-                emptyIcon = new ImageIcon("img/Empty.jpg");
-                forestIcon = new ImageIcon("img/Forest.png");
-                townHallIcon = new ImageIcon("img/TownHall.jpg");
-
-                this.setLayout(new GridLayout(rows, cols));
-
-                for (int row = 0; row < rows; row++) {
-                    for (int col = 0; col < cols; col++) {
-                        JButton button = new JButton();
-                        if (row == 0 || col == 0 || row == rows - 1 || col == cols - 1) {
-                            button.setIcon(voidIcon);
-                            button.setEnabled(false);
-                        } else {
-                            button.setIcon(emptyIcon);
-                        }
-                        buttons[row][col] = button;
-                        this.add(button);
-                    }
-                }
-                switch(numberOfPlayers) {
-
-                    case 1, 2:
-                        buttons[rows - 2][1].setIcon(townHallIcon);
-                        buttons[1][cols -2].setIcon(townHallIcon);
-                        break;
-
-                    case 3:
-                        buttons[rows - 2][1].setIcon(townHallIcon);
-                        buttons[1][cols -2].setIcon(townHallIcon);
-                        buttons[rows - 2][cols-2].setIcon(townHallIcon);
-                        break;
-
-                    case 4:
-                        buttons[rows - 2][1].setIcon(townHallIcon);
-                        buttons[1][cols -2].setIcon(townHallIcon);
-                        buttons[rows - 2][cols-2].setIcon(townHallIcon);
-                        buttons[1][1].setIcon(townHallIcon);
-                        break;
-
-                    default:
-
-                }
-
-                int count = 0;
-                Random rand = new Random();
-                while (count < 10) {
-                    int row = rand.nextInt(rows - 2) + 1;
-                    int col = rand.nextInt(cols - 2) + 1;
-
-                    if (!(buttons[row][col].getIcon().equals(forestIcon) || buttons[row][col].getIcon().equals(voidIcon) || buttons[row][col].getIcon().equals(townHallIcon))) {
-                        buttons[row][col].setIcon(forestIcon);
-                        count++;
-                    }
-                }
-
-
-            }
-        }
-
-        public void GameControl(){
+    public void GameControl(){
         players.clear();
 
         for (int i = 0; i < numberOfPlayers; i++) {
