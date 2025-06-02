@@ -143,29 +143,29 @@ public class GUI extends JFrame{
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        ImageIcon farmIcon = new ImageIcon("10751558.png");
+        ImageIcon farmIcon = new ImageIcon("img/10751558.png");
         JButton farm = new JButton(farmIcon);
         farm.setPreferredSize(new Dimension(50, 50));
-        ImageIcon barrackIcon = new ImageIcon("10751558.png");
+        ImageIcon barrackIcon = new ImageIcon("img/10751558.png");
         JButton barrack = new JButton(barrackIcon);
         barrack.setPreferredSize(new Dimension(50, 50));
-        ImageIcon marketIcon = new ImageIcon("10751558.png");
+        ImageIcon marketIcon = new ImageIcon("img/10751558.png");
         JButton market = new JButton(marketIcon);
         market.setPreferredSize(new Dimension(50, 50));
-        ImageIcon towerIcon = new ImageIcon("10751558.png");
+        ImageIcon towerIcon = new ImageIcon("img/10751558.png");
         JButton tower = new JButton(towerIcon);
         tower.setPreferredSize(new Dimension(50, 50));
 
-        ImageIcon peasantIcon = new ImageIcon("images.png");
+        ImageIcon peasantIcon = new ImageIcon("img/peasent.jpeg");
         JButton peasant = new JButton(peasantIcon);
         peasant.setPreferredSize(new Dimension(50, 50));
-        ImageIcon spearmanIcon = new ImageIcon("images.png");
+        ImageIcon spearmanIcon = new ImageIcon("img/spearman.jpeg");
         JButton spearman = new JButton(spearmanIcon);
         spearman.setPreferredSize(new Dimension(50, 50));
-        ImageIcon swordManIcon = new ImageIcon("images.png");
+        ImageIcon swordManIcon = new ImageIcon("img/swordMan.jpeg");
         JButton swordMan = new JButton(swordManIcon);
         swordMan.setPreferredSize(new Dimension(50, 50));
-        ImageIcon knightIcon = new ImageIcon("images.png");
+        ImageIcon knightIcon = new ImageIcon("img/knight.jpeg");
         JButton knight = new JButton(knightIcon);
         knight.setPreferredSize(new Dimension(50, 50));
 
@@ -229,10 +229,10 @@ public class GUI extends JFrame{
         private ImageIcon townHallIcon;
 
             public gamePanel() {
-                voidIcon = new ImageIcon("Void.jpg");
-                emptyIcon = new ImageIcon("Empty.png");
-                forestIcon = new ImageIcon("Forest.png");
-                townHallIcon = new ImageIcon("TownHall.jpg");
+                voidIcon = new ImageIcon("img/Void.jpg");
+                emptyIcon = new ImageIcon("img/Empty.jpg");
+                forestIcon = new ImageIcon("img/Forest.png");
+                townHallIcon = new ImageIcon("img/TownHall.jpg");
 
                 this.setLayout(new GridLayout(rows, cols));
 
@@ -249,7 +249,6 @@ public class GUI extends JFrame{
                         this.add(button);
                     }
                 }
-                System.out.println(numberOfPlayers);
                 switch(numberOfPlayers) {
 
                     case 1, 2:
@@ -280,7 +279,7 @@ public class GUI extends JFrame{
                     int row = rand.nextInt(rows - 2) + 1;
                     int col = rand.nextInt(cols - 2) + 1;
 
-                    if (!(buttons[row][col].getIcon().equals(forestIcon))|| buttons[row][col].getIcon().equals(voidIcon) || buttons[row][col].getIcon().equals(townHallIcon)) {
+                    if (!(buttons[row][col].getIcon().equals(forestIcon) || buttons[row][col].getIcon().equals(voidIcon) || buttons[row][col].getIcon().equals(townHallIcon))) {
                         buttons[row][col].setIcon(forestIcon);
                         count++;
                     }
