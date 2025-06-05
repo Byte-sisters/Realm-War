@@ -20,6 +20,8 @@ public class Player {
     private ArrayList<Spearman> spearmen;
     private ArrayList<Swordman> swordmen;
 
+    private boolean[][] placeUnit;
+
     public Player(String name) {
         peasants = new ArrayList<>();
         knights = new ArrayList<>();
@@ -29,6 +31,7 @@ public class Player {
         barracks = new ArrayList<>();
         farms = new ArrayList<>();
         markets = new ArrayList<>();
+        placeUnit = new boolean[12][12];
         this.name = name;
         this.townHall = new TownHall();
         this.gold = 10;
@@ -102,7 +105,10 @@ public class Player {
         return barracks;
     }
 
-
+    public ArrayList<Knight> getKnights() { return knights; }
+    public ArrayList<Spearman> getSpearmen() { return spearmen; }
+    public ArrayList<Swordman> getSwordmen() { return swordmen; }
+    public ArrayList<Peasant> getPeasants() { return peasants; }
 
     public boolean HaveMoneyToPayForBarrack(Barrack barrack) {
         return getGold() >= barrack.getPrice() && canMakeBarracks();
@@ -132,4 +138,29 @@ public class Player {
      public boolean HaveMoneyToPayForSwordMan(Swordman swordman) {
         return getGold()-swordman.getPrice()>0 && canMakeSwordman();
      }
+
+     public void setPlaceUnit(Structures structure, int i, int j) {
+        int radius = structure.getCanPlaceUnit();
+
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dy = -radius; dy <= radius; dy++) {
+                int newRow = i + dx;
+                int newCol = j + dy;
+
+                if (newRow >= 0 && newRow < placeUnit.length && newCol >= 0 && newCol < placeUnit[0].length) {
+                    placeUnit[newRow][newCol] = true;
+                }
+            }
+        }
+
+     }
+
+     public boolean[][] getPlaceUnit() {
+        return placeUnit;
+     }
+
+    public TownHall getTownHall() {
+        return townHall;
+    }
+
 }

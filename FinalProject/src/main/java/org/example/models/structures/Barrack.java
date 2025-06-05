@@ -4,5 +4,6 @@ public class Barrack extends Structures{
 
     public Barrack() {
         super();
+        canPlaceUnit = 2;
     }
 }

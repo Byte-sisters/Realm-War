@@ -16,7 +16,7 @@ public abstract class Units {
         this.movementRange = 0;
         this.attackPower=0;
         this.attackRange=0;
-        this.payment = 5;
+        this.payment = 1;
         this.ration = 0;
         this.unitSpace = 0;
         this.price = 10;

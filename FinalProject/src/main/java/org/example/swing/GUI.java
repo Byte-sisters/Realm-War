@@ -4,6 +4,7 @@ import org.example.controller.Game;
 import org.example.models.Board;
 import org.example.models.player.Player;
 import org.example.models.structures.*;
+import org.example.models.units.*;
 import org.example.models.units.Knight;
 import org.example.models.units.Swordman;
 
@@ -20,9 +21,14 @@ public class GUI extends JFrame{
     Game game;
     Board board;
     Structures selectedStructure;
+    Units selectedUnit;
     private JLabel goldLabel;
     private JLabel foodLabel;
     private JLabel playerNameLabel;
+    private int selectedRow = -1;
+    private int selectedCol = -1;
+    private boolean isMovingUnit = false;
+
 
 
     public GUI() {
@@ -153,6 +159,7 @@ public class GUI extends JFrame{
 
         ImageIcon farmIcon = new ImageIcon("img/Farm.png");
         JButton farm = new JButton(farmIcon);
+        farm.setBackground(Color.WHITE);
         farm.addActionListener(actionPerformed -> {
             selectedStructure = new Farm();
 
@@ -160,18 +167,21 @@ public class GUI extends JFrame{
         farm.setPreferredSize(new Dimension(50, 50));
         ImageIcon barrackIcon = new ImageIcon("img/Barrack.jpg");
         JButton barrack = new JButton(barrackIcon);
+        barrack.setBackground(Color.WHITE);
         barrack.addActionListener(actionPerformed -> {
             selectedStructure = new Barrack();
         });
         barrack.setPreferredSize(new Dimension(50, 50));
         ImageIcon marketIcon = new ImageIcon("img/Market.jpg");
         JButton market = new JButton(marketIcon);
+        market.setBackground(Color.WHITE);
         market.addActionListener(actionPerformed -> {
             selectedStructure = new Market();
         });
         market.setPreferredSize(new Dimension(50, 50));
         ImageIcon towerIcon = new ImageIcon("img/Tower.jpg");
         JButton tower = new JButton(towerIcon);
+        tower.setBackground(Color.WHITE);
         tower.addActionListener(actionPerformed -> {
             selectedStructure = new Tower();
         });
@@ -179,15 +189,31 @@ public class GUI extends JFrame{
 
         ImageIcon peasantIcon = new ImageIcon("img/peasent.jpeg");
         JButton peasant = new JButton(peasantIcon);
+        peasant.setBackground(Color.WHITE);
+        peasant.addActionListener(actionPerformed -> {
+            selectedUnit = new Peasant();
+        });
         peasant.setPreferredSize(new Dimension(50, 50));
         ImageIcon spearmanIcon = new ImageIcon("img/spearman.jpeg");
         JButton spearman = new JButton(spearmanIcon);
+        spearman.setBackground(Color.WHITE);
+        spearman.addActionListener(actionPerformed -> {
+            selectedUnit = new Spearman();
+        });
         spearman.setPreferredSize(new Dimension(50, 50));
         ImageIcon swordManIcon = new ImageIcon("img/swordMan.jpeg");
         JButton swordMan = new JButton(swordManIcon);
+        swordMan.setBackground(Color.WHITE);
+        swordMan.addActionListener(actionPerformed -> {
+            selectedUnit = new Swordman();
+        });
         swordMan.setPreferredSize(new Dimension(50, 50));
         ImageIcon knightIcon = new ImageIcon("img/knight.jpeg");
         JButton knight = new JButton(knightIcon);
+        knight.setBackground(Color.WHITE);
+        knight.addActionListener(actionPerformed -> {
+            selectedUnit = new Knight();
+        });
         knight.setPreferredSize(new Dimension(50, 50));
 
 
@@ -244,19 +270,36 @@ public class GUI extends JFrame{
                 for (ActionListener al : board.buttons[i][j].getActionListeners()) {
                     board.buttons[i][j].removeActionListener(al);
                 }
-
                 board.buttons[i][j].addActionListener(e -> {
-                    if (selectedStructure == null) {
-                        JOptionPane.showMessageDialog(GUI.this, "please choose a structure", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
+                    if (isMovingUnit) {
+                        if (board.moveUnit(player, players, selectedRow, selectedCol, row, col)) {
+                            updateGoldLabel(player);
+                        }
+                        isMovingUnit = false;
+                        selectedRow = -1;
+                        selectedCol = -1;
+                        selectedUnit = null;
+                    } else {
+                        if (selectedStructure == null && selectedUnit == null) {
+                            if (board.isPlayerUnitAt(player, row, col)) {
+                                selectedRow = row;
+                                selectedCol = col;
+                                isMovingUnit = true;
+                            } else {
+                                JOptionPane.showMessageDialog(this, "Please choose a structure or unit to place, or select your own unit to move.", "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                            return;
+                        }
+
+                        board.update(player, players, row, col, selectedStructure, selectedUnit);
+                        updateGoldLabel(player);
+                        selectedUnit = null;
+                        selectedStructure = null;
                     }
-                    board.update(player, players, row, col, selectedStructure);
-                    updateGoldLabel(player);
                 });
+
             }
         }
-
-
 
         currentPanel.add(mainPanel, BorderLayout.CENTER);
 
