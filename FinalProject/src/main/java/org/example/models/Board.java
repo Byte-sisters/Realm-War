@@ -303,6 +303,7 @@ public class Board extends JPanel {
         return player.getPlaceUnit()[i][j];
     }
 
+    
     public boolean isPlayerUnitAt(Player player, int row, int col) {
         Icon icon = buttons[row][col].getIcon();
         return icon.equals(peasantIcon) || icon.equals(spearmanIcon) ||
