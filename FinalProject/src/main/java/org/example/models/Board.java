@@ -164,6 +164,7 @@ public class Board extends JPanel {
                     buttons[i][j].setIcon(farmIcon);
                     player.setHasStructure(i,j);
                     player.setOwns(i,j,true);
+                    player.setStructureAt(i,j,farm);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max farm limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -177,6 +178,7 @@ public class Board extends JPanel {
                     buttons[i][j].setIcon(barrackIcon);
                     player.setHasStructure(i,j);
                     player.setOwns(i,j,true);
+                    player.setStructureAt(i,j,barrack);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max barrack limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -190,6 +192,7 @@ public class Board extends JPanel {
                     buttons[i][j].setIcon(marketIcon);
                     player.setHasStructure(i,j);
                     player.setOwns(i,j,true);
+                    player.setStructureAt(i,j,market);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max market limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -203,6 +206,7 @@ public class Board extends JPanel {
                     buttons[i][j].setIcon(towerIcon);
                     player.setHasStructure(i,j);
                     player.setOwns(i,j,true);
+                    player.setStructureAt(i,j,tower);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max tower limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -220,10 +224,11 @@ public class Board extends JPanel {
                     player.setGold(player.getGold() - peasant.getPrice());
                     player.getPeasants().add(peasant);
                     if(buttons[i][j].getIcon().equals(forestIcon)){
-                        player.setFoodSupply(5);
+                        player.UpdateFoodSupply();
                     }
                     buttons[i][j].setIcon(peasantIcon);
                     player.setOwns(i,j,true);
+                    player.setUnitAt(i,j,peasant);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max peasant limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -234,10 +239,11 @@ public class Board extends JPanel {
                     player.setGold(player.getGold() - spearman.getPrice());
                     player.getSpearmen().add(spearman);
                     if(buttons[i][j].getIcon().equals(forestIcon)){
-                        player.setFoodSupply(5);
+                        player.UpdateFoodSupply();
                     }
                     buttons[i][j].setIcon(spearmanIcon);
                     player.setOwns(i,j,true);
+                    player.setUnitAt(i,j,spearman);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max spearman limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -248,10 +254,11 @@ public class Board extends JPanel {
                     player.setGold(player.getGold() - swordman.getPrice());
                     player.getSwordmen().add(swordman);
                     if(buttons[i][j].getIcon().equals(forestIcon)){
-                        player.setFoodSupply(5);
+                        player.UpdateFoodSupply();
                     }
                     buttons[i][j].setIcon(swordManIcon);
                     player.setOwns(i,j,true);
+                    player.setUnitAt(i,j,swordman);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max swordMan limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -262,10 +269,11 @@ public class Board extends JPanel {
                     player.setGold(player.getGold() - knight.getPrice());
                     player.getKnights().add(knight);
                     if(buttons[i][j].getIcon().equals(forestIcon)){
-                        player.setFoodSupply(5);
+                        player.UpdateFoodSupply();
                     }
                     buttons[i][j].setIcon(knightIcon);
                     player.setOwns(i,j,true);
+                    player.setUnitAt(i,j,knight);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max knight limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -330,6 +338,31 @@ public class Board extends JPanel {
           return false;
       }
 
+        for (Player other : players) {
+            if (other != player) {
+                Units targetUnit = other.getUnitOnBoard(toRow,toCol);
+                if (targetUnit != null) {
+                    other.getUnitOnBoard(toRow,toCol).takeDamage(unit.getAttackPower());
+                    System.out.println(other.getUnitOnBoard(toRow,toCol).getHitPoint());
+                    if (targetUnit.getHitPoint() <= 0) {
+                        other.setUnitAt(toRow,toCol, null);
+                        buttons[toRow][toCol].setIcon(emptyIcon);
+                    }
+                    return true;
+                }
+
+                Structures targetStructure = other.getStructureOnBoard(toRow,toCol);
+                if (targetStructure != null) {
+                    other.getStructureOnBoard(toRow,toCol).loseHealthPoints(unit.getAttackPower());
+                    if (targetStructure.getHealthPoints() <= 0) {
+                        other.setStructureAt(toRow,toCol,null);
+                        buttons[toRow][toCol].setIcon(emptyIcon);
+                    }
+                    return true;
+                }
+            }
+        }
+
       Units destinationUnit = getUnitAt(player, toRow, toCol);
 
       if (destinationUnit != null) {
@@ -339,7 +372,6 @@ public class Board extends JPanel {
               removeUnitAt(player, fromRow, fromCol, unit);
               removeUnitAt(player, toRow, toCol, destinationUnit);
 
-
               Units upgradedUnit = getUpgradedUnit(unit);
               addUnitAt(player, toRow, toCol, upgradedUnit);
 
@@ -348,6 +380,8 @@ public class Board extends JPanel {
               buttons[fromRow][fromCol].setIcon(playerIconFor(player,players));
               player.setOwns(fromRow, fromCol,false);
               player.setOwns(toRow, toCol,true);
+              player.setUnitAt(fromRow,fromCol,null);
+              player.setUnitAt(toRow, toCol, upgradedUnit);
               return true;
           } else {
               JOptionPane.showMessageDialog(this, "You can't move a unit here!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -356,10 +390,10 @@ public class Board extends JPanel {
       }
 
       if(buttons[toRow][toCol].getIcon().equals(forestIcon)){
-          player.setFoodSupply(5);
+          player.UpdateFoodSupply();
       }
 
-      Icon icon = buttons[fromRow][fromCol].getIcon();
+        Icon icon = buttons[fromRow][fromCol].getIcon();
       buttons[toRow][toCol].setIcon(icon);
       buttons[fromRow][fromCol].setIcon(playerIconFor(player,players));
 
@@ -367,6 +401,8 @@ public class Board extends JPanel {
       player.getPlaceUnit()[toRow][toCol] = true;
         player.setOwns(fromRow, fromCol,false);
         player.setOwns(toRow, toCol,true);
+        player.setUnitAt(fromRow,fromCol,null);
+        player.setUnitAt(toRow,toCol,unit);
 
       removeUnitAt(player, fromRow, fromCol, unit);
       addUnitAt(player, toRow, toCol, unit);

@@ -8,7 +8,7 @@ public abstract class Structures {
     int canPlaceUnit;
 
     public Structures(){
-        this.healthPoints = 50;
+        this.healthPoints = 30;
         this.level = 1;
         this.maintenanceCost = 5;
         this.price = 10;
@@ -21,8 +21,8 @@ public abstract class Structures {
 
     public int getCanPlaceUnit() {return canPlaceUnit;}
 
-    public void loseHealthPoints(){
-        healthPoints -= 10;
+    public void loseHealthPoints(int damage){
+        healthPoints -= damage;
     }
 
     public int getHealthPoints(){ return healthPoints; }

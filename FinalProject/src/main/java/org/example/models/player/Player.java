@@ -15,6 +15,9 @@ public class Player {
     private ArrayList<Market> markets;
     private ArrayList<Tower> towers;
 
+    private Units[][] unitGrid;
+    private Structures[][] structureGrid;
+
     private ArrayList<Peasant> peasants;
     private ArrayList<Knight> knights;
     private ArrayList<Spearman> spearmen;
@@ -33,6 +36,10 @@ public class Player {
         barracks = new ArrayList<>();
         farms = new ArrayList<>();
         markets = new ArrayList<>();
+
+        unitGrid=new Units[12][12];
+        structureGrid=new Structures[12][12];
+
         placeUnit = new boolean[12][12];
         hasStructure = new boolean[12][12];
         owns = new boolean[12][12];
@@ -45,7 +52,12 @@ public class Player {
     public void changePairTurn(){
         if(!markets.isEmpty()) for(Market market : markets){ gold += market.getaddGold(); }
         if(!farms.isEmpty()) for(Farm farm : farms){ foodSupply += farm.getaddFood(); }
-        if(!spearmen.isEmpty()) for(Spearman spearman : spearmen){ gold -= spearman.getPayment(); foodSupply -= spearman.getRation(); }
+        if(!spearmen.isEmpty()){
+            for(Spearman spearman : spearmen){
+                gold -= spearman.getPayment();
+                foodSupply -= spearman.getRation();
+            }
+        }
         if(!peasants.isEmpty()) for(Peasant peasant : peasants){ gold -= peasant.getPayment(); foodSupply -= peasant.getRation(); }
         if(!knights.isEmpty()) for(Knight knight : knights){ gold -= knight.getPayment(); foodSupply -= knight.getRation(); }
         if(!swordmen.isEmpty()) for(Swordman swordman : swordmen){gold -= swordman.getPayment(); foodSupply -= swordman.getRation(); }
@@ -167,8 +179,8 @@ public class Player {
         return townHall;
     }
 
-    public void setFoodSupply(int foodSupply) {
-        this.foodSupply += foodSupply;
+    public void UpdateFoodSupply() {
+        foodSupply += 5;
     }
 
     public void setHasStructure(int i, int j) {
@@ -183,5 +195,20 @@ public class Player {
     public boolean getOwns(int i, int j) {
         return owns[i][j];
     }
+
+    public Units getUnitOnBoard(int row, int col) {
+        return unitGrid[row][col];
+    }
+    public void setUnitAt(int row, int col, Units unit) {
+        unitGrid[row][col] = unit;
+    }
+
+    public Structures getStructureOnBoard(int row, int col) {
+        return structureGrid[row][col];
+    }
+    public void setStructureAt(int row, int col, Structures structure) {
+        structureGrid[row][col] = structure;
+    }
+
 
 }

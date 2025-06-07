@@ -12,10 +12,10 @@ public abstract class Units {
 
     public Units() {
 
-        this.hitPoint = 0;
+        this.hitPoint = 20;
         this.movementRange = 2;
         this.attackPower=0;
-        this.attackRange=0;
+        this.attackRange=5;
         this.payment = 1;
         this.ration = 1;
         this.unitSpace = 0;
@@ -27,4 +27,12 @@ public abstract class Units {
     }
     public int getPayment(){ return this.payment; }
     public int getMovementRange(){ return this.movementRange; }
+
+    public int getAttackPower() {
+        return attackPower;
+    }
+    public void takeDamage(int damage) {
+        hitPoint = hitPoint - damage;
+    }
+    public int getHitPoint() {return hitPoint;}
 }
