@@ -212,6 +212,7 @@ public class Board extends JPanel {
                 if (player.HaveMoneyToPayForPeasant(peasant)) {
                     player.setGold(player.getGold() - peasant.getPrice());
                     player.getPeasants().add(peasant);
+                    player.setPlaceUnit(peasant,i,j);
                     buttons[i][j].setIcon(peasantIcon);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max peasant limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -222,6 +223,7 @@ public class Board extends JPanel {
                 if (player.HaveMoneyToPayForSpearman(spearman)) {
                     player.setGold(player.getGold() - spearman.getPrice());
                     player.getSpearmen().add(spearman);
+                    player.setPlaceUnit(spearman,i,j);
                     buttons[i][j].setIcon(spearmanIcon);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max spearman limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -232,6 +234,7 @@ public class Board extends JPanel {
                 if (player.HaveMoneyToPayForSwordMan(swordman)) {
                     player.setGold(player.getGold() - swordman.getPrice());
                     player.getSwordmen().add(swordman);
+                    player.setPlaceUnit(swordman,i,j);
                     buttons[i][j].setIcon(swordManIcon);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max swordMan limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -242,6 +245,7 @@ public class Board extends JPanel {
                 if (player.HaveMoneyToPayForKnight(knight)) {
                     player.setGold(player.getGold() - knight.getPrice());
                     player.getKnights().add(knight);
+                    player.setPlaceUnit(knight,i,j);
                     buttons[i][j].setIcon(knightIcon);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max knight limit reached!", "Error", JOptionPane.ERROR_MESSAGE);

@@ -139,8 +139,8 @@ public class Player {
         return getGold()-swordman.getPrice()>0 && canMakeSwordman();
      }
 
-     public void setPlaceUnit(Structures structure, int i, int j) {
-        int radius = structure.getCanPlaceUnit();
+     public void setPlaceUnit(Units unit, int i, int j) {
+        int radius = unit.getMovementRange();
 
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dy = -radius; dy <= radius; dy++) {
@@ -154,6 +154,22 @@ public class Player {
         }
 
      }
+
+    public void setPlaceUnit(Structures structure, int i, int j) {
+        int radius = structure.getCanPlaceUnit();
+
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dy = -radius; dy <= radius; dy++) {
+                int newRow = i + dx;
+                int newCol = j + dy;
+
+                if (newRow >= 0 && newRow < placeUnit.length && newCol >= 0 && newCol < placeUnit[0].length) {
+                    placeUnit[newRow][newCol] = true;
+                }
+            }
+        }
+
+    }
 
      public boolean[][] getPlaceUnit() {
         return placeUnit;
