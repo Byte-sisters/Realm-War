@@ -272,7 +272,7 @@ public class GUI extends JFrame{
                 }
                 board.buttons[i][j].addActionListener(e -> {
                     if (isMovingUnit) {
-                        if (board.moveUnit(player, players, selectedRow, selectedCol, row, col)) {
+                        if (board.moveUnit(player, players, selectedRow, selectedCol, row, col , selectedUnit)) {
                             updateGoldLabel(player);
                         }
                         isMovingUnit = false;
@@ -285,6 +285,7 @@ public class GUI extends JFrame{
                                 selectedRow = row;
                                 selectedCol = col;
                                 isMovingUnit = true;
+                                selectedUnit = board.getUnitAt(player, row, col);
                             } else {
                                 JOptionPane.showMessageDialog(this, "Please choose a structure or unit to place, or select your own unit to move.", "Error", JOptionPane.ERROR_MESSAGE);
                             }

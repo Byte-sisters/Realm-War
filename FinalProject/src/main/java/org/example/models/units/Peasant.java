@@ -4,6 +4,6 @@ public class Peasant extends Units {
     public Peasant() {
         super();
         price = 10;
-        movementRange = 3;
+        movementRange = 2;
     }
 }

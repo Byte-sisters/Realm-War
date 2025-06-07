@@ -212,7 +212,6 @@ public class Board extends JPanel {
                 if (player.HaveMoneyToPayForPeasant(peasant)) {
                     player.setGold(player.getGold() - peasant.getPrice());
                     player.getPeasants().add(peasant);
-                    player.setPlaceUnit(peasant,i,j);
                     buttons[i][j].setIcon(peasantIcon);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max peasant limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -223,7 +222,6 @@ public class Board extends JPanel {
                 if (player.HaveMoneyToPayForSpearman(spearman)) {
                     player.setGold(player.getGold() - spearman.getPrice());
                     player.getSpearmen().add(spearman);
-                    player.setPlaceUnit(spearman,i,j);
                     buttons[i][j].setIcon(spearmanIcon);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max spearman limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -234,7 +232,6 @@ public class Board extends JPanel {
                 if (player.HaveMoneyToPayForSwordMan(swordman)) {
                     player.setGold(player.getGold() - swordman.getPrice());
                     player.getSwordmen().add(swordman);
-                    player.setPlaceUnit(swordman,i,j);
                     buttons[i][j].setIcon(swordManIcon);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max swordMan limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -245,7 +242,6 @@ public class Board extends JPanel {
                 if (player.HaveMoneyToPayForKnight(knight)) {
                     player.setGold(player.getGold() - knight.getPrice());
                     player.getKnights().add(knight);
-                    player.setPlaceUnit(knight,i,j);
                     buttons[i][j].setIcon(knightIcon);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max knight limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -259,6 +255,14 @@ public class Board extends JPanel {
         ImageIcon[] playerIcons = {player1, player2, player3, player4};
         int playerIndex = players.indexOf(player);
         if (playerIndex == -1 || playerIndex >= playerIcons.length) return false;
+        Icon selectedIcon = buttons[i][j].getIcon();
+
+        if (selectedIcon.equals(towerIcon)
+                || selectedIcon.equals(farmIcon)
+                || selectedIcon.equals(marketIcon)
+                || selectedIcon.equals(barrackIcon)){
+            return false;
+        }
 
         return playerIcons[playerIndex].equals(buttons[i][j].getIcon());
     }
@@ -277,9 +281,15 @@ public class Board extends JPanel {
                 icon.equals(swordManIcon) || icon.equals(knightIcon);
     }
 
-    public boolean moveUnit(Player player,ArrayList<Player> players, int fromRow, int fromCol, int toRow, int toCol) {
+    public boolean moveUnit(Player player,ArrayList<Player> players, int fromRow, int fromCol, int toRow, int toCol,Units unit) {
         Icon iconTo = buttons[toRow][toCol].getIcon();
-        if(!canPlaceUnit(player, players, toRow , toCol) || (fromRow == toRow && fromCol == toCol) || iconTo.equals(voidIcon)) {
+        if((fromRow == toRow && fromCol == toCol)) {
+            JOptionPane.showMessageDialog(this, "You can't move a unit here!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        int dx = Math.abs(toRow - fromRow);
+        int dy = Math.abs(toCol - fromCol);
+        if(Math.max(dx,dy) > unit.getMovementRange()) {
             JOptionPane.showMessageDialog(this, "You can't move a unit here!", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -289,8 +299,22 @@ public class Board extends JPanel {
         ImageIcon[] playerIcons = {player1, player2, player3, player4};
         int playerIndex = players.indexOf(player);
         buttons[fromRow][fromCol].setIcon(playerIcons[playerIndex]);
+        player.getPlaceUnit()[fromRow][fromCol] = false;
+        player.getPlaceUnit()[toRow][toCol] = true;
+
 
         return true;
     }
+    public Units getUnitAt(Player player, int row, int col) {
+        Icon icon = buttons[row][col].getIcon();
+
+        if (icon.equals(peasantIcon)) return new Peasant();
+        if (icon.equals(spearmanIcon)) return new Spearman();
+        if (icon.equals(swordManIcon)) return new Swordman();
+        if (icon.equals(knightIcon)) return new Knight();
+
+        return null;
+    }
+
 
 }

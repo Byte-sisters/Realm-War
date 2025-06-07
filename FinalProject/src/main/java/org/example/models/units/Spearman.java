@@ -4,6 +4,6 @@ public class Spearman extends Units {
     public Spearman() {
         super();
         price = 15;
-        movementRange = 2;
+        movementRange = 3;
     }
 }

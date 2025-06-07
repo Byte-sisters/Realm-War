@@ -25,11 +25,12 @@ public class Game {
         if (currentPlayer.hasLost()) {
             players.remove(currentPlayerIndex);
             if (players.isEmpty()) return;
+            currentPlayerIndex = currentPlayerIndex % players.size();
+            currentPlayer = players.get(currentPlayerIndex);
         } else {
-            currentPlayer.changePairTurn();
             gui.ShowGameBoardWindow(currentPlayer);
+            currentPlayer.changePairTurn();
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         }
-
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
     }
 }
