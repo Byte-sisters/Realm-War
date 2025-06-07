@@ -126,7 +126,6 @@ public class Board extends JPanel {
                 break;
 
             default:
-                // Handle other cases if needed
                 break;
         }
 
@@ -163,6 +162,8 @@ public class Board extends JPanel {
                     player.getFarms().add(farm);
                     player.setPlaceUnit(farm,i,j);
                     buttons[i][j].setIcon(farmIcon);
+                    player.setHasStructure(i,j);
+                    player.setOwns(i,j,true);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max farm limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -174,6 +175,8 @@ public class Board extends JPanel {
                     player.getBarracks().add(barrack);
                     player.setPlaceUnit(barrack,i,j);
                     buttons[i][j].setIcon(barrackIcon);
+                    player.setHasStructure(i,j);
+                    player.setOwns(i,j,true);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max barrack limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -185,6 +188,8 @@ public class Board extends JPanel {
                     player.getMarkets().add(market);
                     player.setPlaceUnit(market,i,j);
                     buttons[i][j].setIcon(marketIcon);
+                    player.setHasStructure(i,j);
+                    player.setOwns(i,j,true);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max market limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -196,6 +201,8 @@ public class Board extends JPanel {
                     player.getTowers().add(tower);
                     player.setPlaceUnit(tower,i,j);
                     buttons[i][j].setIcon(towerIcon);
+                    player.setHasStructure(i,j);
+                    player.setOwns(i,j,true);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max tower limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -212,7 +219,11 @@ public class Board extends JPanel {
                 if (player.HaveMoneyToPayForPeasant(peasant)) {
                     player.setGold(player.getGold() - peasant.getPrice());
                     player.getPeasants().add(peasant);
+                    if(buttons[i][j].getIcon().equals(forestIcon)){
+                        player.setFoodSupply(5);
+                    }
                     buttons[i][j].setIcon(peasantIcon);
+                    player.setOwns(i,j,true);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max peasant limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -222,7 +233,11 @@ public class Board extends JPanel {
                 if (player.HaveMoneyToPayForSpearman(spearman)) {
                     player.setGold(player.getGold() - spearman.getPrice());
                     player.getSpearmen().add(spearman);
+                    if(buttons[i][j].getIcon().equals(forestIcon)){
+                        player.setFoodSupply(5);
+                    }
                     buttons[i][j].setIcon(spearmanIcon);
+                    player.setOwns(i,j,true);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max spearman limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -232,7 +247,11 @@ public class Board extends JPanel {
                 if (player.HaveMoneyToPayForSwordMan(swordman)) {
                     player.setGold(player.getGold() - swordman.getPrice());
                     player.getSwordmen().add(swordman);
+                    if(buttons[i][j].getIcon().equals(forestIcon)){
+                        player.setFoodSupply(5);
+                    }
                     buttons[i][j].setIcon(swordManIcon);
+                    player.setOwns(i,j,true);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max swordMan limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -242,7 +261,11 @@ public class Board extends JPanel {
                 if (player.HaveMoneyToPayForKnight(knight)) {
                     player.setGold(player.getGold() - knight.getPrice());
                     player.getKnights().add(knight);
+                    if(buttons[i][j].getIcon().equals(forestIcon)){
+                        player.setFoodSupply(5);
+                    }
                     buttons[i][j].setIcon(knightIcon);
+                    player.setOwns(i,j,true);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max knight limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -271,7 +294,12 @@ public class Board extends JPanel {
         ImageIcon[] playerIcons = {player1, player2, player3, player4};
         int playerIndex = players.indexOf(player);
         if (playerIndex == -1 || playerIndex >= playerIcons.length) return false;
-
+        if(player.getHasStructure(i,j)){
+            return false;
+        }
+        if(getUnitAt(player,i,j)!=null){
+            return false;
+        }
         return player.getPlaceUnit()[i][j];
     }
 
@@ -281,30 +309,112 @@ public class Board extends JPanel {
                 icon.equals(swordManIcon) || icon.equals(knightIcon);
     }
 
-    public boolean moveUnit(Player player,ArrayList<Player> players, int fromRow, int fromCol, int toRow, int toCol,Units unit) {
-        Icon iconTo = buttons[toRow][toCol].getIcon();
-        if((fromRow == toRow && fromCol == toCol)) {
-            JOptionPane.showMessageDialog(this, "You can't move a unit here!", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        int dx = Math.abs(toRow - fromRow);
-        int dy = Math.abs(toCol - fromCol);
-        if(Math.max(dx,dy) > unit.getMovementRange()) {
-            JOptionPane.showMessageDialog(this, "You can't move a unit here!", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
+    public boolean moveUnit(Player player, ArrayList<Player> players, int fromRow, int fromCol, int toRow, int toCol, Units unit) {
+      if (fromRow == toRow && fromCol == toCol) {
+          JOptionPane.showMessageDialog(this, "You can't move a unit here!", "Error", JOptionPane.ERROR_MESSAGE);
+          return false;
+      }
+      if (player.getHasStructure(toRow, toCol)) {
+          JOptionPane.showMessageDialog(this, "You can't move a unit here!", "Error", JOptionPane.ERROR_MESSAGE);
+          return false;
+      }
+      if(!player.getOwns(fromRow,fromCol)){
+          JOptionPane.showMessageDialog(this, "You can only move your own units!", "Error", JOptionPane.ERROR_MESSAGE);
+          return false;
+      }
+      int dx = Math.abs(toRow - fromRow);
+      int dy = Math.abs(toCol - fromCol);
+      if (Math.max(dx, dy) > unit.getMovementRange()) {
+          JOptionPane.showMessageDialog(this, "You can't move a unit here!", "Error", JOptionPane.ERROR_MESSAGE);
+          return false;
+      }
 
-        Icon icon = buttons[fromRow][fromCol].getIcon();
-        buttons[toRow][toCol].setIcon(icon);
+      Units destinationUnit = getUnitAt(player, toRow, toCol);
+
+      if (destinationUnit != null) {
+
+          if (destinationUnit.getClass() == unit.getClass()) {
+
+              removeUnitAt(player, fromRow, fromCol, unit);
+              removeUnitAt(player, toRow, toCol, destinationUnit);
+
+
+              Units upgradedUnit = getUpgradedUnit(unit);
+              addUnitAt(player, toRow, toCol, upgradedUnit);
+
+
+              buttons[toRow][toCol].setIcon(getIconForUnit(upgradedUnit));
+              buttons[fromRow][fromCol].setIcon(playerIconFor(player,players));
+              player.setOwns(fromRow, fromCol,false);
+              player.setOwns(toRow, toCol,true);
+              return true;
+          } else {
+              JOptionPane.showMessageDialog(this, "You can't move a unit here!", "Error", JOptionPane.ERROR_MESSAGE);
+              return false;
+          }
+      }
+
+      if(buttons[toRow][toCol].getIcon().equals(forestIcon)){
+          player.setFoodSupply(5);
+      }
+
+      Icon icon = buttons[fromRow][fromCol].getIcon();
+      buttons[toRow][toCol].setIcon(icon);
+      buttons[fromRow][fromCol].setIcon(playerIconFor(player,players));
+
+      player.getPlaceUnit()[fromRow][fromCol] = false;
+      player.getPlaceUnit()[toRow][toCol] = true;
+        player.setOwns(fromRow, fromCol,false);
+        player.setOwns(toRow, toCol,true);
+
+      removeUnitAt(player, fromRow, fromCol, unit);
+      addUnitAt(player, toRow, toCol, unit);
+
+      return true;
+  }
+
+
+    private void removeUnitAt(Player player, int row, int col, Units unit) {
+        if (unit instanceof Peasant) player.getPeasants().remove(unit);
+        else if (unit instanceof Spearman) player.getSpearmen().remove(unit);
+        else if (unit instanceof Swordman) player.getSwordmen().remove(unit);
+        else if (unit instanceof Knight) player.getKnights().remove(unit);
+
+        player.getPlaceUnit()[row][col] = false;
+    }
+
+    private void addUnitAt(Player player, int row, int col, Units unit) {
+        if (unit instanceof Peasant) player.getPeasants().add((Peasant) unit);
+        else if (unit instanceof Spearman) player.getSpearmen().add((Spearman) unit);
+        else if (unit instanceof Swordman) player.getSwordmen().add((Swordman) unit);
+        else if (unit instanceof Knight) player.getKnights().add((Knight) unit);
+
+        player.getPlaceUnit()[row][col] = true;
+    }
+
+    private Units getUpgradedUnit(Units unit) {
+        if (unit instanceof Peasant) return new Spearman();
+        if (unit instanceof Spearman) return new Swordman();
+        if (unit instanceof Swordman) return new Knight();
+        return unit; // Knight cannot upgrade further
+    }
+
+    private ImageIcon getIconForUnit(Units unit) {
+        if (unit instanceof Peasant) return peasantIcon;
+        if (unit instanceof Spearman) return spearmanIcon;
+        if (unit instanceof Swordman) return swordManIcon;
+        if (unit instanceof Knight) return knightIcon;
+        return null;
+    }
+
+    private ImageIcon playerIconFor(Player player,ArrayList<Player> players) {
         ImageIcon[] playerIcons = {player1, player2, player3, player4};
         int playerIndex = players.indexOf(player);
-        buttons[fromRow][fromCol].setIcon(playerIcons[playerIndex]);
-        player.getPlaceUnit()[fromRow][fromCol] = false;
-        player.getPlaceUnit()[toRow][toCol] = true;
-
-
-        return true;
+        if (playerIndex >= 0 && playerIndex < playerIcons.length)
+            return playerIcons[playerIndex];
+        return null;
     }
+
     public Units getUnitAt(Player player, int row, int col) {
         Icon icon = buttons[row][col].getIcon();
 
@@ -315,6 +425,4 @@ public class Board extends JPanel {
 
         return null;
     }
-
-
 }

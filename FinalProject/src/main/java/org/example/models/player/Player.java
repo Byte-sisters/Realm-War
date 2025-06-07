@@ -20,7 +20,9 @@ public class Player {
     private ArrayList<Spearman> spearmen;
     private ArrayList<Swordman> swordmen;
 
+    private boolean[][] hasStructure;
     private boolean[][] placeUnit;
+    private boolean[][] owns;
 
     public Player(String name) {
         peasants = new ArrayList<>();
@@ -32,6 +34,8 @@ public class Player {
         farms = new ArrayList<>();
         markets = new ArrayList<>();
         placeUnit = new boolean[12][12];
+        hasStructure = new boolean[12][12];
+        owns = new boolean[12][12];
         this.name = name;
         this.townHall = new TownHall();
         this.gold = 10;
@@ -41,10 +45,10 @@ public class Player {
     public void changePairTurn(){
         if(!markets.isEmpty()) for(Market market : markets){ gold += market.getaddGold(); }
         if(!farms.isEmpty()) for(Farm farm : farms){ foodSupply += farm.getaddFood(); }
-        if(!spearmen.isEmpty()) for(Spearman spearman : spearmen){ gold -= spearman.getPayment(); }
-        if(!peasants.isEmpty()) for(Peasant peasant : peasants){ gold -= peasant.getPayment(); }
-        if(!knights.isEmpty()) for(Knight knight : knights){ gold -= knight.getPayment(); }
-        if(!swordmen.isEmpty()) for(Swordman swordman : swordmen){gold -= swordman.getPayment(); }
+        if(!spearmen.isEmpty()) for(Spearman spearman : spearmen){ gold -= spearman.getPayment(); foodSupply -= spearman.getRation(); }
+        if(!peasants.isEmpty()) for(Peasant peasant : peasants){ gold -= peasant.getPayment(); foodSupply -= peasant.getRation(); }
+        if(!knights.isEmpty()) for(Knight knight : knights){ gold -= knight.getPayment(); foodSupply -= knight.getRation(); }
+        if(!swordmen.isEmpty()) for(Swordman swordman : swordmen){gold -= swordman.getPayment(); foodSupply -= swordman.getRation(); }
     }
 
     public boolean canMakeBarracks() {
@@ -161,6 +165,23 @@ public class Player {
 
     public TownHall getTownHall() {
         return townHall;
+    }
+
+    public void setFoodSupply(int foodSupply) {
+        this.foodSupply += foodSupply;
+    }
+
+    public void setHasStructure(int i, int j) {
+        hasStructure[i][j] = true;
+    }
+    public boolean getHasStructure(int i, int j) {
+        return hasStructure[i][j];
+    }
+    public void setOwns(int i, int j , boolean ow) {
+        owns[i][j] = ow;
+    }
+    public boolean getOwns(int i, int j) {
+        return owns[i][j];
     }
 
 }

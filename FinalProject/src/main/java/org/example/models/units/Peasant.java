@@ -5,5 +5,7 @@ public class Peasant extends Units {
         super();
         price = 10;
         movementRange = 2;
+        payment = 1;
+        ration = 1;
     }
 }

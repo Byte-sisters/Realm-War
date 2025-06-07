@@ -17,11 +17,11 @@ public abstract class Units {
         this.attackPower=0;
         this.attackRange=0;
         this.payment = 1;
-        this.ration = 0;
+        this.ration = 1;
         this.unitSpace = 0;
         this.price = 10;
     }
-
+    public int getRation(){return ration;}
     public int getPrice(){
         return this.price;
     }
