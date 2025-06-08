@@ -157,23 +157,34 @@ public class GUI extends JFrame{
 
     public void ShowEndGameWindow(ArrayList<Player> winners) {
         currentPanel.removeAll();
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.VERTICAL;
 
-        JPanel mainPanel = new JPanel(new GridLayout(winners.size() + 2, 1));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
         JLabel label = new JLabel("Game Over!\n Results:");
-        label.setPreferredSize(new Dimension(100, 35));
-        mainPanel.add(label);
+        label.setPreferredSize(new Dimension(200, 35));
+        mainPanel.add(label,gbc);
 
         for (int i = 0; i < winners.size(); i++) {
+            gbc.gridx = 0;
+            gbc.gridy = i+1;
             Player p = winners.get(winners.size() - 1 - i);
             label = new JLabel((i + 1) + ": " + p.getName());
             label.setPreferredSize(new Dimension(200, 30));
-            mainPanel.add(label);
+            mainPanel.add(label,gbc);
         }
 
+        gbc.gridx = 0;
+        gbc.gridy = winners.size()+1;
         JButton okButton = new JButton("OK");
-        okButton.setPreferredSize(new Dimension(100, 35));
+        okButton.setPreferredSize(new Dimension(80, 40));
+        okButton.setBackground(Color.pink);
+        okButton.setForeground(Color.BLACK);
         okButton.addActionListener(e -> System.exit(0));
-        mainPanel.add(okButton);
+        mainPanel.add(okButton,gbc);
 
         currentPanel.add(mainPanel, BorderLayout.CENTER);
         revalidate();
