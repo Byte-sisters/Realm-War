@@ -12,7 +12,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class GUI extends JFrame{
     private JPanel currentPanel;
@@ -36,6 +35,9 @@ public class GUI extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 500);
         setLocationRelativeTo(null);
+
+        foodLabel = new JLabel("food: 0");
+        goldLabel = new JLabel("gold: 0");
 
         currentPanel = new JPanel(new BorderLayout());
         this.add(currentPanel, BorderLayout.CENTER);
@@ -258,10 +260,6 @@ public class GUI extends JFrame{
         mainPanel.add(board, BorderLayout.CENTER);
         mainPanel.add(ButtonPanel, BorderLayout.SOUTH);
 
-        nextTurn.addActionListener(e -> {
-            game.nextTurn();
-
-        });
         for (int i = 0; i < board.buttons.length; i++) {
             for (int j = 0; j < board.buttons[i].length; j++) {
                 final int row = i;
@@ -302,11 +300,19 @@ public class GUI extends JFrame{
             }
         }
 
+        nextTurn.addActionListener(e -> {
+            game.nextTurn();
+        });
+
         currentPanel.add(mainPanel, BorderLayout.CENTER);
 
         revalidate();
         repaint();
     }
+    public void updateFoodLabel(Player player) {
+        foodLabel.setText("Food: " + player.getFoodSupply());
+    }
+
     public void updateGoldLabel(Player player) {
         goldLabel.setText("Gold: " + player.getGold());
         foodLabel.setText("Food: " + player.getFoodSupply());
@@ -327,6 +333,11 @@ public class GUI extends JFrame{
         }
 
         game = new Game(this, players);
+    }
+
+    public void updateResourceLabels(Player player) {
+        updateGoldLabel(player);
+        updateFoodLabel(player);
     }
 
 

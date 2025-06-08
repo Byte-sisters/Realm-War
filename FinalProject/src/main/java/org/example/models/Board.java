@@ -158,7 +158,7 @@ public class Board extends JPanel {
             if (selectedStructure instanceof Farm) {
                 Farm farm = new Farm();
                 if (player.HaveMoneyToPayForFarm(farm)) {
-                    player.setGold(player.getGold() - farm.getPrice());
+                    player.buyStructure(farm);
                     player.getFarms().add(farm);
                     player.setPlaceUnit(farm,i,j);
                     buttons[i][j].setIcon(farmIcon);
@@ -172,7 +172,7 @@ public class Board extends JPanel {
             } else if (selectedStructure instanceof Barrack) {
                 Barrack barrack = new Barrack();
                 if (player.HaveMoneyToPayForBarrack(barrack)) {
-                    player.setGold(player.getGold() - barrack.getPrice());
+                    player.buyStructure(barrack);
                     player.getBarracks().add(barrack);
                     player.setPlaceUnit(barrack,i,j);
                     buttons[i][j].setIcon(barrackIcon);
@@ -186,7 +186,7 @@ public class Board extends JPanel {
             } else if (selectedStructure instanceof Market) {
                 Market market = new Market();
                 if (player.HaveMoneyToPayForMarket(market)) {
-                    player.setGold(player.getGold() - market.getPrice());
+                    player.buyStructure(market);
                     player.getMarkets().add(market);
                     player.setPlaceUnit(market,i,j);
                     buttons[i][j].setIcon(marketIcon);
@@ -200,7 +200,7 @@ public class Board extends JPanel {
             } else if (selectedStructure instanceof Tower) {
                 Tower tower = new Tower();
                 if (player.HaveMoneyToPayForTower(tower)) {
-                    player.setGold(player.getGold() - tower.getPrice());
+                    player.buyStructure(tower);
                     player.getTowers().add(tower);
                     player.setPlaceUnit(tower,i,j);
                     buttons[i][j].setIcon(towerIcon);
@@ -221,10 +221,11 @@ public class Board extends JPanel {
             if (selectedUnit instanceof Peasant) {
                 Peasant peasant = new Peasant();
                 if (player.HaveMoneyToPayForPeasant(peasant)) {
-                    player.setGold(player.getGold() - peasant.getPrice());
+                    player.buyUnit(peasant);
                     player.getPeasants().add(peasant);
                     if(buttons[i][j].getIcon().equals(forestIcon)){
                         player.UpdateFoodSupply();
+                        gui.updateFoodLabel(player);
                     }
                     buttons[i][j].setIcon(peasantIcon);
                     player.setOwns(i,j,true);
@@ -236,10 +237,11 @@ public class Board extends JPanel {
             } else if (selectedUnit instanceof Spearman) {
                 Spearman spearman = new Spearman();
                 if (player.HaveMoneyToPayForSpearman(spearman)) {
-                    player.setGold(player.getGold() - spearman.getPrice());
+                    player.buyUnit(spearman);
                     player.getSpearmen().add(spearman);
                     if(buttons[i][j].getIcon().equals(forestIcon)){
                         player.UpdateFoodSupply();
+                        gui.updateFoodLabel(player);
                     }
                     buttons[i][j].setIcon(spearmanIcon);
                     player.setOwns(i,j,true);
@@ -251,10 +253,11 @@ public class Board extends JPanel {
             } else if (selectedUnit instanceof Swordman) {
                 Swordman swordman = new Swordman();
                 if (player.HaveMoneyToPayForSwordMan(swordman)) {
-                    player.setGold(player.getGold() - swordman.getPrice());
+                    player.buyUnit(swordman);
                     player.getSwordmen().add(swordman);
                     if(buttons[i][j].getIcon().equals(forestIcon)){
                         player.UpdateFoodSupply();
+                        gui.updateFoodLabel(player);
                     }
                     buttons[i][j].setIcon(swordManIcon);
                     player.setOwns(i,j,true);
@@ -266,10 +269,11 @@ public class Board extends JPanel {
             } else if (selectedUnit instanceof Knight) {
                 Knight knight = new Knight();
                 if (player.HaveMoneyToPayForKnight(knight)) {
-                    player.setGold(player.getGold() - knight.getPrice());
+                    player.buyUnit(knight);
                     player.getKnights().add(knight);
                     if(buttons[i][j].getIcon().equals(forestIcon)){
                         player.UpdateFoodSupply();
+                        gui.updateFoodLabel(player);
                     }
                     buttons[i][j].setIcon(knightIcon);
                     player.setOwns(i,j,true);
@@ -344,20 +348,24 @@ public class Board extends JPanel {
                 if (targetUnit != null) {
                     other.getUnitOnBoard(toRow,toCol).takeDamage(unit.getAttackPower());
                     System.out.println(other.getUnitOnBoard(toRow,toCol).getHitPoint());
-                    if (targetUnit.getHitPoint() <= 0) {
+                    if (other.getUnitOnBoard(toRow,toCol).getHitPoint() <= 0) {
                         other.setUnitAt(toRow,toCol, null);
                         buttons[toRow][toCol].setIcon(emptyIcon);
                     }
+                    player.onUnitMove(unit);
+                    gui.updateFoodLabel(player);
                     return true;
                 }
 
                 Structures targetStructure = other.getStructureOnBoard(toRow,toCol);
                 if (targetStructure != null) {
                     other.getStructureOnBoard(toRow,toCol).loseHealthPoints(unit.getAttackPower());
-                    if (targetStructure.getHealthPoints() <= 0) {
+                    if (other.getStructureOnBoard(toRow,toCol).getHealthPoints() <= 0) {
                         other.setStructureAt(toRow,toCol,null);
                         buttons[toRow][toCol].setIcon(emptyIcon);
                     }
+                    player.onUnitMove(unit);
+                    gui.updateFoodLabel(player);
                     return true;
                 }
             }
@@ -371,7 +379,6 @@ public class Board extends JPanel {
 
               removeUnitAt(player, fromRow, fromCol, unit);
               removeUnitAt(player, toRow, toCol, destinationUnit);
-
               Units upgradedUnit = getUpgradedUnit(unit);
               addUnitAt(player, toRow, toCol, upgradedUnit);
 
@@ -382,6 +389,8 @@ public class Board extends JPanel {
               player.setOwns(toRow, toCol,true);
               player.setUnitAt(fromRow,fromCol,null);
               player.setUnitAt(toRow, toCol, upgradedUnit);
+              player.onUnitMove(upgradedUnit);
+              gui.updateFoodLabel(player);
               return true;
           } else {
               JOptionPane.showMessageDialog(this, "You can't move a unit here!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -391,6 +400,7 @@ public class Board extends JPanel {
 
       if(buttons[toRow][toCol].getIcon().equals(forestIcon)){
           player.UpdateFoodSupply();
+          gui.updateFoodLabel(player);
       }
 
         Icon icon = buttons[fromRow][fromCol].getIcon();
@@ -403,6 +413,8 @@ public class Board extends JPanel {
         player.setOwns(toRow, toCol,true);
         player.setUnitAt(fromRow,fromCol,null);
         player.setUnitAt(toRow,toCol,unit);
+        player.onUnitMove(unit);
+        gui.updateFoodLabel(player);
 
       removeUnitAt(player, fromRow, fromCol, unit);
       addUnitAt(player, toRow, toCol, unit);

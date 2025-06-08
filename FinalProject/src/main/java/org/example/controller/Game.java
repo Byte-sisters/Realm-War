@@ -26,10 +26,13 @@ public class Game {
             players.remove(currentPlayerIndex);
             if (players.isEmpty()) return;
             currentPlayerIndex = currentPlayerIndex % players.size();
-            currentPlayer = players.get(currentPlayerIndex);
+            nextTurn();
+            return;
         } else {
+            currentPlayer.changeFoodPairTurn();
+            currentPlayer.changeGoldPairTurn();
+            gui.updateResourceLabels(currentPlayer);
             gui.ShowGameBoardWindow(currentPlayer);
-            currentPlayer.changePairTurn();
             currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         }
     }

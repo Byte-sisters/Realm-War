@@ -14,7 +14,7 @@ public abstract class Units {
 
         this.hitPoint = 20;
         this.movementRange = 2;
-        this.attackPower=0;
+        this.attackPower=5;
         this.attackRange=5;
         this.payment = 1;
         this.ration = 1;

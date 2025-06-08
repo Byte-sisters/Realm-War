@@ -49,18 +49,27 @@ public class Player {
         this.foodSupply = 10;
     }
 
-    public void changePairTurn(){
-        if(!markets.isEmpty()) for(Market market : markets){ gold += market.getaddGold(); }
-        if(!farms.isEmpty()) for(Farm farm : farms){ foodSupply += farm.getaddFood(); }
-        if(!spearmen.isEmpty()){
-            for(Spearman spearman : spearmen){
-                gold -= spearman.getPayment();
-                foodSupply -= spearman.getRation();
+    public void changeGoldPairTurn(){
+        if(!markets.isEmpty()) {
+            for(Market market : markets){
+                gold += market.getaddGold();
             }
         }
-        if(!peasants.isEmpty()) for(Peasant peasant : peasants){ gold -= peasant.getPayment(); foodSupply -= peasant.getRation(); }
-        if(!knights.isEmpty()) for(Knight knight : knights){ gold -= knight.getPayment(); foodSupply -= knight.getRation(); }
-        if(!swordmen.isEmpty()) for(Swordman swordman : swordmen){gold -= swordman.getPayment(); foodSupply -= swordman.getRation(); }
+    }
+
+    public void changeFoodPairTurn(){
+        int foodChange = 0;
+        if(!farms.isEmpty()) {
+            for(Farm farm : farms){
+                foodChange += farm.getaddFood();
+            }
+        }
+        foodSupply += foodChange;
+    }
+
+    public void onUnitMove(Units unit) {
+        foodSupply -= unit.getRation();
+        gold -= unit.getRation();
     }
 
     public boolean canMakeBarracks() {
@@ -104,8 +113,11 @@ public class Player {
     }
 
     public int getFoodSupply() {return foodSupply;}
-    public void setGold(int gold) {
-        this.gold = gold;
+    public void buyUnit(Units unit) {
+        gold -= unit.getPrice();
+    }
+    public void buyStructure(Structures structure) {
+        gold -= structure.getPrice();
     }
 
     public ArrayList<Farm> getFarms() {
@@ -142,17 +154,17 @@ public class Player {
     }
 
      public boolean HaveMoneyToPayForPeasant(Peasant peasant) {
-         return getGold()-peasant.getPrice()>0 && canMakePeasants() ;
+         return getGold()-peasant.getPrice()>=0 && canMakePeasants() ;
      }
 
      public boolean HaveMoneyToPayForKnight(Knight knight) {
-        return getGold()-knight.getPrice()>0 && canMakeKnights();
+        return getGold()-knight.getPrice()>=0 && canMakeKnights();
      }
      public boolean HaveMoneyToPayForSpearman(Spearman spearman) {
-         return getGold()-spearman.getPrice()>0 && canMakeSpearman();
+         return getGold()-spearman.getPrice()>=0 && canMakeSpearman();
      }
      public boolean HaveMoneyToPayForSwordMan(Swordman swordman) {
-        return getGold()-swordman.getPrice()>0 && canMakeSwordman();
+        return getGold()-swordman.getPrice()>=0 && canMakeSwordman();
      }
 
     public void setPlaceUnit(Structures structure, int i, int j) {
@@ -174,10 +186,6 @@ public class Player {
      public boolean[][] getPlaceUnit() {
         return placeUnit;
      }
-
-    public TownHall getTownHall() {
-        return townHall;
-    }
 
     public void UpdateFoodSupply() {
         foodSupply += 5;
