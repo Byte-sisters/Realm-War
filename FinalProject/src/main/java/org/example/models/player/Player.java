@@ -6,6 +6,7 @@ import org.example.models.units.*;
 import java.util.ArrayList;
 
 public class Player {
+    private int i,j;
     private String name;
     private TownHall townHall;
     private int gold;
@@ -47,6 +48,20 @@ public class Player {
         this.townHall = new TownHall();
         this.gold = 10;
         this.foodSupply = 10;
+        this.i=0;
+        this.j=0;
+    }
+
+    public void setIJ(int i, int j) {
+        this.i=i;
+        this.j=j;
+    }
+
+    public int getI() {
+        return i;
+    }
+    public int getJ() {
+        return j;
     }
 
     public void changeGoldPairTurn(){
@@ -105,7 +120,8 @@ public class Player {
     }
 
     public boolean hasLost(){
-        return townHall.getHealthPoints()==0;
+        if(getStructureOnBoard(getI(),getJ())==null) return true;
+        return false;
     }
 
     public int getGold() {
@@ -218,5 +234,11 @@ public class Player {
         structureGrid[row][col] = structure;
     }
 
+    public Units[][] GetUnitGrid(){
+        return unitGrid;
+    }
 
+    public Structures[][] GetStructureAt() {
+        return structureGrid;
+    }
 }

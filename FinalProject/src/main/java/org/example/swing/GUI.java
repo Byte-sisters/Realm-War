@@ -9,6 +9,7 @@ import org.example.models.units.Knight;
 import org.example.models.units.Swordman;
 
 import javax.swing.*;
+import javax.swing.text.TextAction;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -154,6 +155,32 @@ public class GUI extends JFrame{
         repaint();
     }
 
+    public void ShowEndGameWindow(ArrayList<Player> winners) {
+        currentPanel.removeAll();
+
+        JPanel mainPanel = new JPanel(new GridLayout(winners.size() + 2, 1));
+        JLabel label = new JLabel("Game Over!\n Results:");
+        label.setPreferredSize(new Dimension(100, 35));
+        mainPanel.add(label);
+
+        for (int i = 0; i < winners.size(); i++) {
+            Player p = winners.get(winners.size() - 1 - i);
+            label = new JLabel((i + 1) + ": " + p.getName());
+            label.setPreferredSize(new Dimension(200, 30));
+            mainPanel.add(label);
+        }
+
+        JButton okButton = new JButton("OK");
+        okButton.setPreferredSize(new Dimension(100, 35));
+        okButton.addActionListener(e -> System.exit(0));
+        mainPanel.add(okButton);
+
+        currentPanel.add(mainPanel, BorderLayout.CENTER);
+        revalidate();
+        repaint();
+    }
+
+
     public void ShowGameBoardWindow(Player player){
         currentPanel.removeAll();
 
@@ -272,6 +299,7 @@ public class GUI extends JFrame{
                     if (isMovingUnit) {
                         if (board.moveUnit(player, players, selectedRow, selectedCol, row, col , selectedUnit)) {
                             updateGoldLabel(player);
+                            lossGoldAndFood(player);
                         }
                         isMovingUnit = false;
                         selectedRow = -1;
@@ -292,6 +320,7 @@ public class GUI extends JFrame{
 
                         board.update(player, players, row, col, selectedStructure, selectedUnit);
                         updateGoldLabel(player);
+                        lossGoldAndFood(player);
                         selectedUnit = null;
                         selectedStructure = null;
                     }
@@ -308,6 +337,46 @@ public class GUI extends JFrame{
 
         revalidate();
         repaint();
+    }
+
+    public void lossGoldAndFood(Player player) {
+        ImageIcon emptyIcon = new ImageIcon("img/Empty.jpg");
+        if(player.getFoodSupply()<0) {
+            Units[][] units = player.GetUnitGrid();
+            JOptionPane.showMessageDialog(this,"Food is too low!\nHP decreased.","warning",JOptionPane.INFORMATION_MESSAGE);
+            if(units != null) {
+                for (int i = 0; i < 12; i++) {
+                    for (int j = 0; j < 12; j++) {
+                        if(units[i][j] != null) {
+                            units[i][j].takeDamage(5);
+                            if (units[i][j].getHitPoint() < 0) {
+                                player.setStructureAt(i, j, null);
+                                JOptionPane.showMessageDialog(this, "Structure destroyed because of loss of gold!", "warning", JOptionPane.INFORMATION_MESSAGE);
+                                board.buttons[i][j].setIcon(emptyIcon);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(player.getGold()<0) {
+            Structures[][] structures = player.GetStructureAt();
+            JOptionPane.showMessageDialog(this, "Gold is too low!\nHP decreased.", "warning", JOptionPane.INFORMATION_MESSAGE);
+            if(structures != null) {
+                for (int i = 0; i < 12; i++) {
+                    for (int j = 0; j < 12; j++) {
+                        if(structures[i][j] != null && !(structures[i][j] instanceof TownHall)) {
+                            structures[i][j].loseHealthPoints(5);
+                            if (structures[i][j].getHealthPoints() < 0) {
+                                player.setStructureAt(i, j, null);
+                                JOptionPane.showMessageDialog(this, "Structure destroyed because of loss of gold!", "warning", JOptionPane.INFORMATION_MESSAGE);
+                                board.buttons[i][j].setIcon(emptyIcon);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     public void updateFoodLabel(Player player) {
         foodLabel.setText("Food: " + player.getFoodSupply());
@@ -332,11 +401,53 @@ public class GUI extends JFrame{
             }
         }
 
+        switch (numberOfPlayers) {
+            case 1, 2:
+                TownHall townHall1 = new TownHall();
+                players.get(0).setStructureAt(10,1,townHall1);
+                players.get(0).setIJ(10,1);
+                TownHall townHall2 = new TownHall();
+                players.get(1).setStructureAt(1,10,townHall2);
+                players.get(1).setIJ(1,10);
+                break;
+
+            case 3:
+                TownHall townHall01 = new TownHall();
+                players.get(0).setStructureAt(10,1,townHall01);
+                players.get(0).setIJ(10,1);
+                TownHall townHall02 = new TownHall();
+                players.get(1).setStructureAt(1,10,townHall02);
+                players.get(1).setIJ(1,10);
+                TownHall townHall03 = new TownHall();
+                players.get(2).setStructureAt(10,10,townHall03);
+                players.get(2).setIJ(10,10);
+                break;
+
+            case 4:
+                TownHall townHall001 = new TownHall();
+                players.get(0).setStructureAt(10,1,townHall001);
+                players.get(0).setIJ(10,1);
+                TownHall townHall002 = new TownHall();
+                players.get(1).setStructureAt(1,10,townHall002);
+                players.get(1).setIJ(1,10);
+                TownHall townHall003 = new TownHall();
+                players.get(2).setStructureAt(10,10,townHall003);
+                players.get(2).setIJ(10,10);
+                TownHall townHall004 = new TownHall();
+                players.get(3).setStructureAt(1,1,townHall004);
+                players.get(3).setIJ(1,1);
+                break;
+
+            default:
+                break;
+        }
+
         game = new Game(this, players);
     }
 
     public void updateResourceLabels(Player player) {
         updateGoldLabel(player);
+        lossGoldAndFood(player);
         updateFoodLabel(player);
     }
 

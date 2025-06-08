@@ -347,9 +347,10 @@ public class Board extends JPanel {
                 Units targetUnit = other.getUnitOnBoard(toRow,toCol);
                 if (targetUnit != null) {
                     other.getUnitOnBoard(toRow,toCol).takeDamage(unit.getAttackPower());
-                    System.out.println(other.getUnitOnBoard(toRow,toCol).getHitPoint());
+                    JOptionPane.showMessageDialog(this,"unit damaged!\nHP left: "+targetUnit.getHitPoint(),null,JOptionPane.INFORMATION_MESSAGE);
                     if (other.getUnitOnBoard(toRow,toCol).getHitPoint() <= 0) {
                         other.setUnitAt(toRow,toCol, null);
+                        JOptionPane.showMessageDialog(this,"unit destroyed!",null,JOptionPane.INFORMATION_MESSAGE);
                         buttons[toRow][toCol].setIcon(emptyIcon);
                     }
                     player.onUnitMove(unit);
@@ -360,8 +361,10 @@ public class Board extends JPanel {
                 Structures targetStructure = other.getStructureOnBoard(toRow,toCol);
                 if (targetStructure != null) {
                     other.getStructureOnBoard(toRow,toCol).loseHealthPoints(unit.getAttackPower());
+                    JOptionPane.showMessageDialog(this,"Structure damaged!\nHP left: "+targetStructure.getHealthPoints(),null,JOptionPane.INFORMATION_MESSAGE);
                     if (other.getStructureOnBoard(toRow,toCol).getHealthPoints() <= 0) {
                         other.setStructureAt(toRow,toCol,null);
+                        JOptionPane.showMessageDialog(this,"structure destroyed!",null,JOptionPane.INFORMATION_MESSAGE);
                         buttons[toRow][toCol].setIcon(emptyIcon);
                     }
                     player.onUnitMove(unit);
