@@ -24,10 +24,13 @@ public class GUI extends JFrame{
     Units selectedUnit;
     private JLabel goldLabel;
     private JLabel foodLabel;
+    private JLabel timerLabel;
     private JLabel playerNameLabel;
     private int selectedRow = -1;
     private int selectedCol = -1;
     private boolean isMovingUnit = false;
+    private Timer countdownTimer;
+    private int timeLeft;
 
 
     public GUI() {
@@ -262,9 +265,11 @@ public class GUI extends JFrame{
         playerNameLabel = new JLabel("Player Name: " + player.getName());
         foodLabel = new JLabel("Food: " + player.getFoodSupply());
         goldLabel = new JLabel("Gold: " + player.getGold());
+        timerLabel = new JLabel("Time left: 20");
         topPanel.add(playerNameLabel);
         topPanel.add(foodLabel);
         topPanel.add(goldLabel);
+        topPanel.add(timerLabel);
         board.setSize(300,300);
         JPanel ButtonPanel = new JPanel(new BorderLayout());
 
@@ -365,6 +370,13 @@ public class GUI extends JFrame{
             game.nextTurn();
         });
 */
+        nextTurn.addActionListener(e -> {
+            if (countdownTimer != null && countdownTimer.isRunning()) {
+                countdownTimer.stop();
+            }
+            game.nextTurn();
+        });
+
         currentPanel.add(mainPanel, BorderLayout.CENTER);
 
         revalidate();
@@ -482,6 +494,24 @@ public class GUI extends JFrame{
         lossGoldAndFood(player);
         updateFoodLabel(player);
     }
+    public void startCountdown(int seconds) {
+        if (countdownTimer != null && countdownTimer.isRunning()) {
+            countdownTimer.stop();
+        }
 
+        timeLeft = seconds;
+        timerLabel.setText("Time left: " + timeLeft);
+
+        countdownTimer = new Timer(1000, e -> {
+            timeLeft--;
+            timerLabel.setText("Time left: " + timeLeft);
+            if (timeLeft <= 0) {
+                countdownTimer.stop();
+                game.nextTurn();
+            }
+        });
+
+        countdownTimer.start();
+    }
 
 }

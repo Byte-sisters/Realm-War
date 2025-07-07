@@ -30,6 +30,7 @@ public class Game {
             winners.add(players.get(0));
             gui.ShowEndGameWindow(winners);
             turnScheduler.shutdown();
+
             return;
         }
 
@@ -55,6 +56,7 @@ public class Game {
             currentPlayer.changeGoldPairTurn();
             gui.updateResourceLabels(currentPlayer);
             gui.ShowGameBoardWindow(currentPlayer);
+            gui.startCountdown(20);
             currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         }
     }
