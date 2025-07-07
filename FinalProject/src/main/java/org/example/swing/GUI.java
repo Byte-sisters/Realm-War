@@ -366,10 +366,6 @@ public class GUI extends JFrame{
             }
         }
 
-        /*nextTurn.addActionListener(e -> {
-            game.nextTurn();
-        });
-*/
         nextTurn.addActionListener(e -> {
             if (countdownTimer != null && countdownTimer.isRunning()) {
                 countdownTimer.stop();
@@ -434,16 +430,28 @@ public class GUI extends JFrame{
 
     public void GameControl(){
         players.clear();
-
         for (int i = 0; i < numberOfPlayers; i++) {
             String name = JOptionPane.showInputDialog(this, "Enter name for Player " + (i + 1) + ":");
-            if (name == null || name.trim().isEmpty()) {
+            if (name == null) {
+
+                int confirm = JOptionPane.showConfirmDialog(this, "Do you want to cancel player setup?", "Confirm Cancel", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+
+                    players.clear();
+                    ShowMainMenu();
+                    return;
+                } else {
+                    i--;
+                    continue;
+                }
+            } else if (name.trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please enter a valid name!", "Error", JOptionPane.ERROR_MESSAGE);
                 i--;
             } else {
-                players.add(new Player(name));
+                players.add(new Player(name.trim()));
             }
         }
+
 
         switch (numberOfPlayers) {
             case 1, 2:
