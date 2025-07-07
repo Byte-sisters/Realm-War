@@ -16,7 +16,7 @@ public class Market extends Structures {
 
     @Override
     public  boolean levelUp(Player player) {
-        if(player.getGold() >= 5){
+        if(player.getGold() >= 5 && level<4){
             player.setGold(player.getGold() - 5);
             healthPoints +=10;
             addGold += 5;

@@ -20,7 +20,8 @@ public abstract class Structures {
     }
 
     public boolean levelUp(Player player){
-        if(player.getGold() >= 5 && level<=4){
+        if(player.getGold() >= 5 && level<4){
+            System.out.println(level);
             player.setGold(player.getGold() - 5);
             healthPoints +=10;
             level++;

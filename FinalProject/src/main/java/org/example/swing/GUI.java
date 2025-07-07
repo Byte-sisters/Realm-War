@@ -308,9 +308,10 @@ public class GUI extends JFrame{
                 }
                 board.buttons[i][j].addActionListener(e -> {
                     if(player.getHasStructure(row,col)){
+                        int toLevel = player.getStructureOnBoard(row,col).getLevel() + 1;
                         int result = JOptionPane.showConfirmDialog(
                                 this,
-                                "Do you want to level up your structure to level "+player.getStructureOnBoard(row,col).getLevel()+"?",
+                                "Do you want to level up your structure to level "+toLevel+"?",
                                 "Confirmation",
                                 JOptionPane.YES_NO_OPTION
                         );
@@ -326,14 +327,12 @@ public class GUI extends JFrame{
                                else{
                                    JOptionPane.showMessageDialog(this, "Your structure has been level up! You have level "+player.getStructureOnBoard(row,col).getLevel()+"!");
                                }
+                               updateGoldLabel(player);
                            }
                            else{
                                JOptionPane.showMessageDialog(this, "You Dont Have Enough Money or you have reached the max of level up!");
                            }
-                        } else if (result == JOptionPane.NO_OPTION) {
-                            JOptionPane.showMessageDialog(this, "OK");
                         }
-
 
                     }else if (isMovingUnit) {
                         if (board.moveUnit(player, players, selectedRow, selectedCol, row, col , selectedUnit)) {
