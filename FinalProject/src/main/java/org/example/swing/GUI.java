@@ -30,7 +30,6 @@ public class GUI extends JFrame{
     private boolean isMovingUnit = false;
 
 
-
     public GUI() {
         setTitle("RealM War");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -39,9 +38,10 @@ public class GUI extends JFrame{
 
         foodLabel = new JLabel("food: 0");
         goldLabel = new JLabel("gold: 0");
-
         currentPanel = new JPanel(new BorderLayout());
         this.add(currentPanel, BorderLayout.CENTER);
+
+
 
         ShowMainMenu();
 
@@ -265,13 +265,7 @@ public class GUI extends JFrame{
         topPanel.add(playerNameLabel);
         topPanel.add(foodLabel);
         topPanel.add(goldLabel);
-
-
-
         board.setSize(300,300);
-
-
-
         JPanel ButtonPanel = new JPanel(new BorderLayout());
 
         JPanel nextTurnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5,0));
@@ -367,10 +361,10 @@ public class GUI extends JFrame{
             }
         }
 
-        nextTurn.addActionListener(e -> {
+        /*nextTurn.addActionListener(e -> {
             game.nextTurn();
         });
-
+*/
         currentPanel.add(mainPanel, BorderLayout.CENTER);
 
         revalidate();
@@ -481,8 +475,8 @@ public class GUI extends JFrame{
         }
 
         game = new Game(this, players);
+        game.startTurnLoop();
     }
-
     public void updateResourceLabels(Player player) {
         updateGoldLabel(player);
         lossGoldAndFood(player);

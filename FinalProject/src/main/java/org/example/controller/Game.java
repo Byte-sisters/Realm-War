@@ -2,15 +2,20 @@ package org.example.controller;
 
 import org.example.models.player.Player;
 import org.example.swing.GUI;
-
+import java.util.concurrent.*;
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Game {
     private GUI gui;
     private ArrayList<Player> players;
     private int currentPlayerIndex;
     private ArrayList<Player> winners;
+    private ScheduledExecutorService turnScheduler = Executors.newSingleThreadScheduledExecutor();
+
 
     public Game(GUI gui, ArrayList<Player> players) {
         this.gui = gui;
@@ -24,6 +29,7 @@ public class Game {
         if (players.size() == 1) {
             winners.add(players.get(0));
             gui.ShowEndGameWindow(winners);
+            turnScheduler.shutdown();
             return;
         }
 
@@ -36,6 +42,7 @@ public class Game {
             if (players.size() == 1) {
                 winners.add(players.get(0));
                 gui.ShowEndGameWindow(winners);
+                turnScheduler.shutdown();
                 return;
             }
 
@@ -51,4 +58,16 @@ public class Game {
             currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         }
     }
+    public void startTurnLoop() {
+        turnScheduler.scheduleAtFixedRate(() -> {
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    nextTurn();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }, 0, 20, TimeUnit.SECONDS);
+    }
+
 }
