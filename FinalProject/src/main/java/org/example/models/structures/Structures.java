@@ -1,5 +1,9 @@
 package org.example.models.structures;
 
+import org.example.models.player.Player;
+
+import javax.swing.*;
+
 public abstract class Structures {
     int healthPoints;
     int level;
@@ -15,8 +19,14 @@ public abstract class Structures {
         this.canPlaceUnit = 1;
     }
 
-    public void levelUp(){
-        level++;
+    public boolean levelUp(Player player){
+        if(player.getGold() >= 5 && level<=4){
+            player.setGold(player.getGold() - 5);
+            healthPoints +=10;
+            level++;
+            return true;
+        }
+      return false;
     }
 
     public int getCanPlaceUnit() {return canPlaceUnit;}
@@ -30,4 +40,7 @@ public abstract class Structures {
     public int getMaintenanceCost(){ return maintenanceCost; }
 
     public int getPrice(){ return price; }
+    public int getLevel(){ return level;
+
+    }
 }

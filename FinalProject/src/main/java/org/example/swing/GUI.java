@@ -307,7 +307,35 @@ public class GUI extends JFrame{
                     board.buttons[i][j].removeActionListener(al);
                 }
                 board.buttons[i][j].addActionListener(e -> {
-                    if (isMovingUnit) {
+                    if(player.getHasStructure(row,col)){
+                        int result = JOptionPane.showConfirmDialog(
+                                this,
+                                "Do you want to level up your structure to level "+player.getStructureOnBoard(row,col).getLevel()+"?",
+                                "Confirmation",
+                                JOptionPane.YES_NO_OPTION
+                        );
+
+                        if (result == JOptionPane.YES_OPTION) {
+                           if(player.getStructureOnBoard(row,col).levelUp(player)){
+                               if(player.getStructureOnBoard(row,col)instanceof Farm){
+                                   JOptionPane.showMessageDialog(this, "Your structure has been level up! You have level "+player.getStructureOnBoard(row,col).getLevel()+"!\nHP increased by 5\nGiven Food increased by 5!");
+                               }
+                               else if(player.getStructureOnBoard(row,col)instanceof Market){
+                                   JOptionPane.showMessageDialog(this, "Your structure has been level up! You have level "+player.getStructureOnBoard(row,col).getLevel()+"!\nHP increased by 5\nGiven Gold increased by 5!");
+                               }
+                               else{
+                                   JOptionPane.showMessageDialog(this, "Your structure has been level up! You have level "+player.getStructureOnBoard(row,col).getLevel()+"!");
+                               }
+                           }
+                           else{
+                               JOptionPane.showMessageDialog(this, "You Dont Have Enough Money or you have reached the max of level up!");
+                           }
+                        } else if (result == JOptionPane.NO_OPTION) {
+                            JOptionPane.showMessageDialog(this, "OK");
+                        }
+
+
+                    }else if (isMovingUnit) {
                         if (board.moveUnit(player, players, selectedRow, selectedCol, row, col , selectedUnit)) {
                             updateGoldLabel(player);
                             lossGoldAndFood(player);
@@ -324,7 +352,7 @@ public class GUI extends JFrame{
                                 isMovingUnit = true;
                                 selectedUnit = board.getUnitAt(player, row, col);
                             } else {
-                                JOptionPane.showMessageDialog(this, "Please choose a structure or unit to place, or select your own unit to move.", "Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(this, "Please choose a structure or unit to place, or select your own unit to move or level up your structure.", "Error", JOptionPane.ERROR_MESSAGE);
                             }
                             return;
                         }
