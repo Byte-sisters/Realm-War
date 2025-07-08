@@ -10,6 +10,8 @@ public abstract class Structures {
     int maintenanceCost;
     int price;
     int canPlaceUnit;
+    int row;
+    int column;
 
     public Structures(){
         this.healthPoints = 30;
@@ -17,6 +19,19 @@ public abstract class Structures {
         this.maintenanceCost = 5;
         this.price = 10;
         this.canPlaceUnit = 1;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+    public void setColumn(int column) {
+        this.column = column;
+    }
+    public int getRow(){
+        return row;
+    }
+    public int getColumn(){
+        return column;
     }
 
     public boolean levelUp(Player player){

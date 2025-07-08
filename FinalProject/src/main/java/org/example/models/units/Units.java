@@ -9,6 +9,8 @@ public abstract class Units {
     int ration;
     int unitSpace;
     int price;
+    int row;
+    int column;
 
     public Units() {
 
@@ -20,6 +22,19 @@ public abstract class Units {
         this.ration = 1;
         this.unitSpace = 0;
         this.price = 10;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+    public void setColumn(int column) {
+        this.column = column;
+    }
+    public int getRow(){
+        return row;
+    }
+    public int getColumn(){
+        return column;
     }
     public int getRation(){return ration;}
     public int getPrice(){

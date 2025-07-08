@@ -32,7 +32,7 @@ public class Board extends JPanel {
     private ImageIcon swordManIcon;
     private ImageIcon knightIcon;
 
-    private GUI gui;  // Add GUI reference here
+    private GUI gui;
 
     public Board(int numberOfPlayers, GUI gui) {
         this.gui = gui;
@@ -165,6 +165,7 @@ public class Board extends JPanel {
                     player.setHasStructure(i,j);
                     player.setOwns(i,j,true);
                     player.setStructureAt(i,j,farm);
+                    player.setStructureOnArray(farm);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max farm limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -172,6 +173,7 @@ public class Board extends JPanel {
             } else if (selectedStructure instanceof Barrack) {
                 Barrack barrack = new Barrack();
                 if (player.HaveMoneyToPayForBarrack(barrack)) {
+                    player.setStructureOnArray(barrack);
                     player.buyStructure(barrack);
                     player.getBarracks().add(barrack);
                     player.setPlaceUnit(barrack,i,j);
@@ -186,6 +188,7 @@ public class Board extends JPanel {
             } else if (selectedStructure instanceof Market) {
                 Market market = new Market();
                 if (player.HaveMoneyToPayForMarket(market)) {
+                    player.setStructureOnArray(market);
                     player.buyStructure(market);
                     player.getMarkets().add(market);
                     player.setPlaceUnit(market,i,j);
@@ -205,6 +208,7 @@ public class Board extends JPanel {
                     player.setPlaceUnit(tower,i,j);
                     buttons[i][j].setIcon(towerIcon);
                     player.setHasStructure(i,j);
+                    player.setStructureOnArray(tower);
                     player.setOwns(i,j,true);
                     player.setStructureAt(i,j,tower);
                 } else {
@@ -223,6 +227,7 @@ public class Board extends JPanel {
                 if (player.HaveMoneyToPayForPeasant(peasant)) {
                     player.buyUnit(peasant);
                     player.getPeasants().add(peasant);
+                    player.setUnitsOnArray(peasant);
                     if(buttons[i][j].getIcon().equals(forestIcon)){
                         player.UpdateFoodSupply();
                         gui.updateFoodLabel(player);
@@ -238,6 +243,7 @@ public class Board extends JPanel {
                 Spearman spearman = new Spearman();
                 if (player.HaveMoneyToPayForSpearman(spearman)) {
                     player.buyUnit(spearman);
+                    player.setUnitsOnArray(spearman);
                     player.getSpearmen().add(spearman);
                     if(buttons[i][j].getIcon().equals(forestIcon)){
                         player.UpdateFoodSupply();
@@ -254,6 +260,7 @@ public class Board extends JPanel {
                 Swordman swordman = new Swordman();
                 if (player.HaveMoneyToPayForSwordMan(swordman)) {
                     player.buyUnit(swordman);
+                    player.setUnitsOnArray(swordman);
                     player.getSwordmen().add(swordman);
                     if(buttons[i][j].getIcon().equals(forestIcon)){
                         player.UpdateFoodSupply();
@@ -270,6 +277,7 @@ public class Board extends JPanel {
                 Knight knight = new Knight();
                 if (player.HaveMoneyToPayForKnight(knight)) {
                     player.buyUnit(knight);
+                    player.setUnitsOnArray(knight);
                     player.getKnights().add(knight);
                     if(buttons[i][j].getIcon().equals(forestIcon)){
                         player.UpdateFoodSupply();

@@ -1,13 +1,17 @@
 package org.example.models.player;
 
+import org.example.models.blocks.EmptyBlock;
+import org.example.models.blocks.ForestBlock;
 import org.example.models.structures.*;
 import org.example.models.units.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Player {
     private int i,j;
     private String name;
+    int turn;
     private TownHall townHall;
     private int gold;
     private int foodSupply;
@@ -15,6 +19,12 @@ public class Player {
     private ArrayList<Farm> farms;
     private ArrayList<Market> markets;
     private ArrayList<Tower> towers;
+
+    private ArrayList<Units> units;
+    private ArrayList<Structures> structures;
+    private ArrayList<ForestBlock> trees;
+    private ArrayList<EmptyBlock> blocks;
+
 
     private Units[][] unitGrid;
     private Structures[][] structureGrid;
@@ -28,7 +38,7 @@ public class Player {
     private boolean[][] placeUnit;
     private boolean[][] owns;
 
-    public Player(String name) {
+    public Player(String name, int turn) {
         peasants = new ArrayList<>();
         knights = new ArrayList<>();
         spearmen = new ArrayList<>();
@@ -37,6 +47,12 @@ public class Player {
         barracks = new ArrayList<>();
         farms = new ArrayList<>();
         markets = new ArrayList<>();
+        this.turn = turn;
+
+        this.structures = new ArrayList<>();
+        this.units = new ArrayList<>();
+        this.trees = new ArrayList<>();
+        this.blocks = new ArrayList<>();
 
         unitGrid=new Units[12][12];
         structureGrid=new Structures[12][12];
@@ -132,6 +148,7 @@ public class Player {
     }
 
     public int getFoodSupply() {return foodSupply;}
+    public void setFoodSupply(int foodSupply) {this.foodSupply = foodSupply;}
     public void buyUnit(Units unit) {
         gold -= unit.getPrice();
     }
@@ -202,6 +219,17 @@ public class Player {
 
     }
 
+    public int getTurn(){return turn;}
+    public void setTurn(int turn) {this.turn = turn;}
+
+    public void setStructureOnArray(Structures structure) {
+        structures.add(structure);
+    }
+
+    public void setUnitsOnArray(Units unit) {
+        units.add(unit);
+    }
+
      public boolean[][] getPlaceUnit() {
         return placeUnit;
      }
@@ -243,5 +271,36 @@ public class Player {
 
     public Structures[][] GetStructureAt() {
         return structureGrid;
+    }
+
+    public ArrayList<Structures> getStructures() {
+        return structures;
+    }
+
+    public void setStructures(ArrayList<Structures> structures) {
+        this.structures = structures;
+    }
+
+    // Getter & Setter for units
+    public ArrayList<Units> getUnits() {
+        return units;
+    }
+
+    public void setUnits(ArrayList<Units> units) {
+        this.units = units;
+    }
+
+    public ArrayList<EmptyBlock> getBlocks() {
+        return blocks;
+    }
+    public void setBlocks(ArrayList<EmptyBlock> blocks) {
+        this.blocks = blocks;
+    }
+
+    public ArrayList<ForestBlock> getTrees() {
+        return trees;
+    }
+    public void setTrees(ArrayList<ForestBlock> trees) {
+        this.trees = trees;
     }
 }

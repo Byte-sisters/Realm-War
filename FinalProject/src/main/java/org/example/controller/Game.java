@@ -30,7 +30,6 @@ public class Game {
             winners.add(players.get(0));
             gui.ShowEndGameWindow(winners);
             turnScheduler.shutdown();
-
             return;
         }
 

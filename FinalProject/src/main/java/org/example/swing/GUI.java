@@ -9,12 +9,13 @@ import org.example.models.units.Knight;
 import org.example.models.units.Swordman;
 
 import javax.swing.*;
-import javax.swing.text.TextAction;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import org.example.models.DB;
 
 public class GUI extends JFrame{
+    private DB db = new DB();
     private JPanel currentPanel;
     int numberOfPlayers;
     ArrayList<Player> players = new ArrayList<Player>();
@@ -190,6 +191,7 @@ public class GUI extends JFrame{
         mainPanel.add(okButton,gbc);
 
         currentPanel.add(mainPanel, BorderLayout.CENTER);
+        db.deleteTable();
         revalidate();
         repaint();
     }
@@ -374,6 +376,7 @@ public class GUI extends JFrame{
         });
 
         currentPanel.add(mainPanel, BorderLayout.CENTER);
+        db.updatePlayer(player.getTurn(),player.getFoodSupply(),player.getGold(),player.getStructures(),player.getUnits(),player.getBlocks(),player.getTrees(),player.getName());
 
         revalidate();
         repaint();
@@ -430,6 +433,9 @@ public class GUI extends JFrame{
 
     public void GameControl(){
         players.clear();
+
+        db.createTable();
+
         for (int i = 0; i < numberOfPlayers; i++) {
             String name = JOptionPane.showInputDialog(this, "Enter name for Player " + (i + 1) + ":");
             if (name == null) {
@@ -448,7 +454,9 @@ public class GUI extends JFrame{
                 JOptionPane.showMessageDialog(this, "Please enter a valid name!", "Error", JOptionPane.ERROR_MESSAGE);
                 i--;
             } else {
-                players.add(new Player(name.trim()));
+                Player player = new Player(name.trim(),i);
+                players.add(player);
+                db.insertPlayer(player , i);
             }
         }
 
