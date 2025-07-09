@@ -1,5 +1,6 @@
 package org.example.models.player;
 
+import org.example.models.blocks.Blocks;
 import org.example.models.blocks.EmptyBlock;
 import org.example.models.blocks.ForestBlock;
 import org.example.models.structures.*;
@@ -228,6 +229,7 @@ public class Player {
 
     public void setUnitsOnArray(Units unit) {
         units.add(unit);
+        System.out.println("Added units to array");
     }
 
      public boolean[][] getPlaceUnit() {
@@ -281,7 +283,6 @@ public class Player {
         this.structures = structures;
     }
 
-    // Getter & Setter for units
     public ArrayList<Units> getUnits() {
         return units;
     }
@@ -302,5 +303,21 @@ public class Player {
     }
     public void setTrees(ArrayList<ForestBlock> trees) {
         this.trees = trees;
+    }
+
+    public void setBlockOnArray(EmptyBlock block) {
+        blocks.add(block);
+    }
+    public void setTreeOnArray(ForestBlock block) {
+        trees.add(block);
+    }
+    public void deletBlock(EmptyBlock block) {
+        blocks.remove(block);
+    }
+    public void deletUnit(Units unit) {
+        units.remove(unit);
+    }
+    public void deletStructure(Structures structure) {
+        structures.remove(structure);
     }
 }

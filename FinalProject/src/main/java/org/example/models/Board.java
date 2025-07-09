@@ -1,5 +1,7 @@
 package org.example.models;
 
+import org.example.models.blocks.EmptyBlock;
+import org.example.models.blocks.ForestBlock;
 import org.example.models.player.Player;
 import org.example.models.structures.*;
 import org.example.models.units.*;
@@ -14,6 +16,9 @@ import java.util.Random;
 public class Board extends JPanel {
     int rows = 12;
     int cols = 12;
+    int numberOfPlayers;
+    private ArrayList<EmptyBlock> blocks = new ArrayList<>();
+    private ArrayList<ForestBlock> trees =  new ArrayList<>();
     public JButton[][] buttons = new JButton[rows][cols];
     private ImageIcon voidIcon;
     private ImageIcon emptyIcon;
@@ -34,8 +39,11 @@ public class Board extends JPanel {
 
     private GUI gui;
 
-    public Board(int numberOfPlayers, GUI gui) {
+    public Board(int numberOfPlayers, GUI gui, ArrayList<EmptyBlock> blocks, ArrayList<ForestBlock> trees) {
         this.gui = gui;
+        this.numberOfPlayers = numberOfPlayers;
+        this.blocks = blocks;
+        this.trees = trees;
 
         voidIcon = new ImageIcon("img/Void.jpg");
         emptyIcon = new ImageIcon("img/Empty.jpg");
@@ -54,9 +62,6 @@ public class Board extends JPanel {
         swordManIcon = new ImageIcon("img/swordMan.jpeg");
         knightIcon = new ImageIcon("img/knight.jpeg");
 
-
-        this.setLayout(new GridLayout(rows, cols));
-
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 JButton button = new JButton();
@@ -72,6 +77,12 @@ public class Board extends JPanel {
                 this.add(button);
             }
         }
+
+
+        this.setLayout(new GridLayout(rows, cols));
+    }
+
+    public void newBoard() {
 
         switch (numberOfPlayers) {
             case 1, 2:
@@ -143,6 +154,10 @@ public class Board extends JPanel {
                     buttons[row][col].getIcon().equals(player3) ||
                     buttons[row][col].getIcon().equals(player4))) {
                 buttons[row][col].setIcon(forestIcon);
+                ForestBlock tree = new ForestBlock();
+                tree.setColumn(col);
+                tree.setRow(row);
+                trees.add(tree);
                 count++;
             }
         }
@@ -235,6 +250,9 @@ public class Board extends JPanel {
                     buttons[i][j].setIcon(peasantIcon);
                     player.setOwns(i,j,true);
                     player.setUnitAt(i,j,peasant);
+                    EmptyBlock newEmptyBlock = new EmptyBlock();
+                    newEmptyBlock.setColumn(j);
+                    newEmptyBlock.setRow(i);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max peasant limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -252,6 +270,9 @@ public class Board extends JPanel {
                     buttons[i][j].setIcon(spearmanIcon);
                     player.setOwns(i,j,true);
                     player.setUnitAt(i,j,spearman);
+                    EmptyBlock newEmptyBlock = new EmptyBlock();
+                    newEmptyBlock.setColumn(j);
+                    newEmptyBlock.setRow(i);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max spearman limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -269,6 +290,9 @@ public class Board extends JPanel {
                     buttons[i][j].setIcon(swordManIcon);
                     player.setOwns(i,j,true);
                     player.setUnitAt(i,j,swordman);
+                    EmptyBlock newEmptyBlock = new EmptyBlock();
+                    newEmptyBlock.setColumn(j);
+                    newEmptyBlock.setRow(i);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max swordMan limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -286,6 +310,10 @@ public class Board extends JPanel {
                     buttons[i][j].setIcon(knightIcon);
                     player.setOwns(i,j,true);
                     player.setUnitAt(i,j,knight);
+                    EmptyBlock newEmptyBlock = new EmptyBlock();
+                    newEmptyBlock.setColumn(j);
+                    newEmptyBlock.setRow(i);
+                    player.setBlockOnArray(newEmptyBlock);
                 } else {
                     JOptionPane.showMessageDialog(this, "Not enough gold or max knight limit reached!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -359,10 +387,22 @@ public class Board extends JPanel {
                     if (other.getUnitOnBoard(toRow,toCol).getHitPoint() <= 0) {
                         other.setUnitAt(toRow,toCol, null);
                         JOptionPane.showMessageDialog(this,"unit destroyed!",null,JOptionPane.INFORMATION_MESSAGE);
+                        other.deletUnit(targetUnit);
                         buttons[toRow][toCol].setIcon(emptyIcon);
+                        EmptyBlock EmptyBlock = new EmptyBlock();
+                        EmptyBlock.setColumn(toCol);
+                        EmptyBlock.setRow(toRow);
+                        blocks.add(EmptyBlock);
                     }
                     player.onUnitMove(unit);
+                    unit.setRow(toRow);
+                    unit.setColumn(toCol);
                     gui.updateFoodLabel(player);
+                    EmptyBlock newEmptyBlock = new EmptyBlock();
+                    newEmptyBlock.setColumn(toCol);
+                    newEmptyBlock.setRow(toRow);
+                    blocks.add(newEmptyBlock);
+                    player.setBlockOnArray(newEmptyBlock);
                     return true;
                 }
 
@@ -374,9 +414,24 @@ public class Board extends JPanel {
                         other.setStructureAt(toRow,toCol,null);
                         JOptionPane.showMessageDialog(this,"structure destroyed!",null,JOptionPane.INFORMATION_MESSAGE);
                         buttons[toRow][toCol].setIcon(emptyIcon);
+                        EmptyBlock EmptyBlock = new EmptyBlock();
+                        EmptyBlock.setColumn(toCol);
+                        EmptyBlock.setRow(toRow);
+                        blocks.add(EmptyBlock);
+                        other.deletStructure(targetStructure);
                     }
                     player.onUnitMove(unit);
                     gui.updateFoodLabel(player);
+                    unit.setRow(toRow);
+                    unit.setColumn(toCol);
+                    EmptyBlock EmptyBlock = new EmptyBlock();
+                    EmptyBlock.setColumn(toCol);
+                    EmptyBlock.setRow(toRow);
+                    blocks.add(EmptyBlock);
+                    EmptyBlock newEmptyBlock = new EmptyBlock();//ghadim
+                    newEmptyBlock.setColumn(toCol);//
+                    newEmptyBlock.setRow(toRow);//
+                    player.setBlockOnArray(newEmptyBlock);//
                     return true;
                 }
             }
@@ -402,6 +457,18 @@ public class Board extends JPanel {
               player.setUnitAt(toRow, toCol, upgradedUnit);
               player.onUnitMove(upgradedUnit);
               gui.updateFoodLabel(player);
+              unit.setRow(toRow);
+              unit.setColumn(toCol);
+              EmptyBlock newEmptyBlock = new EmptyBlock();
+              newEmptyBlock.setColumn(toCol);
+              newEmptyBlock.setRow(toRow);
+              player.setBlockOnArray(newEmptyBlock);
+
+              EmptyBlock EmptyBlock = new EmptyBlock();
+              EmptyBlock.setColumn(toCol);
+              EmptyBlock.setRow(toRow);
+              blocks.add(EmptyBlock);
+
               return true;
           } else {
               JOptionPane.showMessageDialog(this, "You can't move a unit here!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -429,6 +496,17 @@ public class Board extends JPanel {
 
       removeUnitAt(player, fromRow, fromCol, unit);
       addUnitAt(player, toRow, toCol, unit);
+      unit.setRow(toRow);
+      unit.setColumn(toCol);
+      EmptyBlock newEmptyBlock = new EmptyBlock();
+      newEmptyBlock.setColumn(toCol);
+      newEmptyBlock.setRow(toRow);
+      player.setBlockOnArray(newEmptyBlock);
+
+        EmptyBlock EmptyBlock = new EmptyBlock();
+        EmptyBlock.setColumn(toCol);
+        EmptyBlock.setRow(toRow);
+        blocks.add(EmptyBlock);
 
       return true;
   }
@@ -456,7 +534,7 @@ public class Board extends JPanel {
         if (unit instanceof Peasant) return new Spearman();
         if (unit instanceof Spearman) return new Swordman();
         if (unit instanceof Swordman) return new Knight();
-        return unit; // Knight cannot upgrade further
+        return unit;
     }
 
     private ImageIcon getIconForUnit(Units unit) {

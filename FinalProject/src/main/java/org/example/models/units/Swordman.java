@@ -8,5 +8,6 @@ public class Swordman extends Units {
         attackPower = 9;
         payment = 3;
         ration = 3;
+        this.type = "Swordman";
     }
 }

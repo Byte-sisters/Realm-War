@@ -113,6 +113,7 @@
 package org.example.models;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.example.models.blocks.EmptyBlock;
 import org.example.models.blocks.ForestBlock;
@@ -131,9 +132,13 @@ public class DB {
     private static final String USER = "postgres";
     private static final String PASS = "Elahe@1385";
 
-    private static final Gson gson = new Gson();
+    private static final Gson gson =new GsonBuilder()
+        .registerTypeAdapter(Structures.class, new structuresAdapter())
+            .create();
+    ;
 
-    public static void createTable() {
+
+    public static void createPlayerTable() {
         String sql = "CREATE TABLE IF NOT EXISTS RealMWarTable (" +
                 "turn INT, " +
                 "name VARCHAR(50), " +
@@ -238,7 +243,7 @@ public class DB {
         return players;
     }
 
-    public static void deleteTable() {
+    public static void deletePlayerTable() {
         String sql = "DROP TABLE IF EXISTS RealMWarTable";
 
         try {
@@ -249,5 +254,75 @@ public class DB {
         }catch (SQLException e) {
                 System.out.println("Error deleting table: " + e.getMessage());
             }
+    }
+
+    public static void insertOrUpdateBoardState(ArrayList<EmptyBlock> blocks, ArrayList<ForestBlock> trees) {
+        String sql = "INSERT INTO BoardState (id, blocks, trees) VALUES (1, ?, ?) " +
+                "ON CONFLICT (id) DO UPDATE SET blocks = EXCLUDED.blocks, trees = EXCLUDED.trees";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            String blocksJson = gson.toJson(blocks);
+            String treesJson = gson.toJson(trees);
+
+            pstmt.setString(1, blocksJson);
+            pstmt.setString(2, treesJson);
+
+            pstmt.executeUpdate();
+            System.out.println("BoardState inserted or updated successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
         }
+    }
+
+
+    public static BoardState getBoardState() {
+        String sql = "SELECT blocks, trees FROM BoardState WHERE id=1";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                String blocksJson = rs.getString("blocks");
+                String treesJson = rs.getString("trees");
+                Type blockListType = new TypeToken<ArrayList<EmptyBlock>>() {}.getType();
+                Type treeListType = new TypeToken<ArrayList<ForestBlock>>() {}.getType();
+                ArrayList<EmptyBlock> blocks = gson.fromJson(blocksJson, blockListType);
+                ArrayList<ForestBlock> trees = gson.fromJson(treesJson, treeListType);
+                return new BoardState(blocks, trees);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e);
+        }
+        return null;
+    }
+
+    public static void createBoardTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS BoardState (" +
+                "id INT PRIMARY KEY, " +
+                "blocks TEXT, " +
+                "trees TEXT" +
+                ")";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("BoardState table created (if not exists).");
+        } catch (SQLException e) {
+            System.out.println("Error creating BoardState table: " + e.getMessage());
+        }
+    }
+
+    public static void deleteBoardTable() {
+        String sql = "DROP TABLE IF EXISTS BoardState";
+
+        try {
+            Connection conn = DriverManager.getConnection(URL, USER, PASS);
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+            System.out.println("Table deleted successfully");
+        }catch (SQLException e) {
+            System.out.println("Error deleting table: " + e.getMessage());
+        }
+    }
+
 }

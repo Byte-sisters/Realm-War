@@ -11,9 +11,10 @@ public abstract class Units {
     int price;
     int row;
     int column;
+    String type;
 
     public Units() {
-
+        this.type = "Units";
         this.hitPoint = 20;
         this.movementRange = 2;
         this.attackPower=5;
@@ -22,6 +23,8 @@ public abstract class Units {
         this.ration = 1;
         this.unitSpace = 0;
         this.price = 10;
+        this.row =0;
+        this.column =0;
     }
 
     public void setRow(int row) {

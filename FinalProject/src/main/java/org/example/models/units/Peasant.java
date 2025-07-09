@@ -8,5 +8,6 @@ public class Peasant extends Units {
         attackPower = 5;
         payment = 1;
         ration = 1;
+        this.type = "Peasant";
     }
 }
