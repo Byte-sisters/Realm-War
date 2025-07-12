@@ -8,6 +8,5 @@ public class Spearman extends Units {
         attackPower = 7;
         payment = 2;
         ration = 2;
-        this.type = "Spearman";
     }
 }

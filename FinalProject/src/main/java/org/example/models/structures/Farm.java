@@ -7,7 +7,6 @@ public class Farm extends Structures{
     public Farm() {
         super();
         addFood = 5;
-        this.type = "Farm";
     }
     public int getaddFood() { return addFood;}
     @Override

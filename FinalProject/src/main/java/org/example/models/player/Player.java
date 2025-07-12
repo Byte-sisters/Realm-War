@@ -1,18 +1,13 @@
 package org.example.models.player;
 
-import org.example.models.blocks.Blocks;
-import org.example.models.blocks.EmptyBlock;
-import org.example.models.blocks.ForestBlock;
 import org.example.models.structures.*;
 import org.example.models.units.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Player {
     private int i,j;
     private String name;
-    int turn;
     private TownHall townHall;
     private int gold;
     private int foodSupply;
@@ -20,12 +15,6 @@ public class Player {
     private ArrayList<Farm> farms;
     private ArrayList<Market> markets;
     private ArrayList<Tower> towers;
-
-    private ArrayList<Units> units;
-    private ArrayList<Structures> structures;
-    private ArrayList<ForestBlock> trees;
-    private ArrayList<EmptyBlock> blocks;
-
 
     private Units[][] unitGrid;
     private Structures[][] structureGrid;
@@ -39,7 +28,7 @@ public class Player {
     private boolean[][] placeUnit;
     private boolean[][] owns;
 
-    public Player(String name, int turn) {
+    public Player(String name) {
         peasants = new ArrayList<>();
         knights = new ArrayList<>();
         spearmen = new ArrayList<>();
@@ -48,12 +37,6 @@ public class Player {
         barracks = new ArrayList<>();
         farms = new ArrayList<>();
         markets = new ArrayList<>();
-        this.turn = turn;
-
-        this.structures = new ArrayList<>();
-        this.units = new ArrayList<>();
-        this.trees = new ArrayList<>();
-        this.blocks = new ArrayList<>();
 
         unitGrid=new Units[12][12];
         structureGrid=new Structures[12][12];
@@ -149,7 +132,6 @@ public class Player {
     }
 
     public int getFoodSupply() {return foodSupply;}
-    public void setFoodSupply(int foodSupply) {this.foodSupply = foodSupply;}
     public void buyUnit(Units unit) {
         gold -= unit.getPrice();
     }
@@ -190,19 +172,19 @@ public class Player {
         return getGold() >= tower.getPrice() && canMakeTowers();
     }
 
-     public boolean HaveMoneyToPayForPeasant(Peasant peasant) {
-         return getGold()-peasant.getPrice()>=0 && canMakePeasants() ;
-     }
+    public boolean HaveMoneyToPayForPeasant(Peasant peasant) {
+        return getGold()-peasant.getPrice()>=0 && canMakePeasants() ;
+    }
 
-     public boolean HaveMoneyToPayForKnight(Knight knight) {
+    public boolean HaveMoneyToPayForKnight(Knight knight) {
         return getGold()-knight.getPrice()>=0 && canMakeKnights();
-     }
-     public boolean HaveMoneyToPayForSpearman(Spearman spearman) {
-         return getGold()-spearman.getPrice()>=0 && canMakeSpearman();
-     }
-     public boolean HaveMoneyToPayForSwordMan(Swordman swordman) {
+    }
+    public boolean HaveMoneyToPayForSpearman(Spearman spearman) {
+        return getGold()-spearman.getPrice()>=0 && canMakeSpearman();
+    }
+    public boolean HaveMoneyToPayForSwordMan(Swordman swordman) {
         return getGold()-swordman.getPrice()>=0 && canMakeSwordman();
-     }
+    }
 
     public void setPlaceUnit(Structures structure, int i, int j) {
         int radius = structure.getCanPlaceUnit();
@@ -220,21 +202,9 @@ public class Player {
 
     }
 
-    public int getTurn(){return turn;}
-    public void setTurn(int turn) {this.turn = turn;}
-
-    public void setStructureOnArray(Structures structure) {
-        structures.add(structure);
-    }
-
-    public void setUnitsOnArray(Units unit) {
-        units.add(unit);
-        System.out.println("Added units to array");
-    }
-
-     public boolean[][] getPlaceUnit() {
+    public boolean[][] getPlaceUnit() {
         return placeUnit;
-     }
+    }
 
     public void UpdateFoodSupply() {
         foodSupply += 5;
@@ -273,51 +243,5 @@ public class Player {
 
     public Structures[][] GetStructureAt() {
         return structureGrid;
-    }
-
-    public ArrayList<Structures> getStructures() {
-        return structures;
-    }
-
-    public void setStructures(ArrayList<Structures> structures) {
-        this.structures = structures;
-    }
-
-    public ArrayList<Units> getUnits() {
-        return units;
-    }
-
-    public void setUnits(ArrayList<Units> units) {
-        this.units = units;
-    }
-
-    public ArrayList<EmptyBlock> getBlocks() {
-        return blocks;
-    }
-    public void setBlocks(ArrayList<EmptyBlock> blocks) {
-        this.blocks = blocks;
-    }
-
-    public ArrayList<ForestBlock> getTrees() {
-        return trees;
-    }
-    public void setTrees(ArrayList<ForestBlock> trees) {
-        this.trees = trees;
-    }
-
-    public void setBlockOnArray(EmptyBlock block) {
-        blocks.add(block);
-    }
-    public void setTreeOnArray(ForestBlock block) {
-        trees.add(block);
-    }
-    public void deletBlock(EmptyBlock block) {
-        blocks.remove(block);
-    }
-    public void deletUnit(Units unit) {
-        units.remove(unit);
-    }
-    public void deletStructure(Structures structure) {
-        structures.remove(structure);
     }
 }

@@ -8,7 +8,6 @@ public class Market extends Structures {
     public Market() {
         super();
         addGold = 5;
-        this.type = "Market";
     }
 
     public int getaddGold() {
@@ -28,5 +27,3 @@ public class Market extends Structures {
 
     }
 }
-
-

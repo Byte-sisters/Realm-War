@@ -8,6 +8,5 @@ public class Knight extends Units {
         attackPower = 11;
         payment = 4;
         ration = 4;
-        this.type = "Knight";
     }
 }

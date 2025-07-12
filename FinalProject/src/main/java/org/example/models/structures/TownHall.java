@@ -4,6 +4,5 @@ public class TownHall extends Structures {
 
     public TownHall() {
         super();
-        this.type = "TownHall";
     }
 }

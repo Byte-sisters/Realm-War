@@ -2,9 +2,6 @@ package org.example.swing;
 
 import org.example.controller.Game;
 import org.example.models.Board;
-import org.example.models.BoardState;
-import org.example.models.blocks.EmptyBlock;
-import org.example.models.blocks.ForestBlock;
 import org.example.models.player.Player;
 import org.example.models.structures.*;
 import org.example.models.units.*;
@@ -12,13 +9,12 @@ import org.example.models.units.Knight;
 import org.example.models.units.Swordman;
 
 import javax.swing.*;
+import javax.swing.text.TextAction;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import org.example.models.DB;
 
 public class GUI extends JFrame{
-    private DB db = new DB();
     private JPanel currentPanel;
     int numberOfPlayers;
     ArrayList<Player> players = new ArrayList<Player>();
@@ -35,8 +31,6 @@ public class GUI extends JFrame{
     private boolean isMovingUnit = false;
     private Timer countdownTimer;
     private int timeLeft;
-    public ArrayList<EmptyBlock> blocks = new ArrayList<>();
-    public ArrayList<ForestBlock> trees = new ArrayList<>();
 
 
     public GUI() {
@@ -83,40 +77,12 @@ public class GUI extends JFrame{
         panel.add(button3,gbc);
 
         button1.addActionListener(e -> {
-            db.deletePlayerTable();
-            db.deleteBoardTable();
             ShowNewGame();
         });
-
         button2.addActionListener(e -> {
-            ArrayList<Player> players = db.getPlayers();
-            if (players == null || players.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "No saved game found!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
 
-            BoardState boardState = db.getBoardState();
-            if (boardState == null || boardState.blocks == null || boardState.trees == null) {
-                JOptionPane.showMessageDialog(this, "No saved board state found!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            numberOfPlayers = players.size();
-            System.out.println("Number of players: " + numberOfPlayers);
-            for (int i = 0; i < numberOfPlayers; i++) {
-                System.out.println(players.get(i).getName());
-            }
-
-            board = new Board(numberOfPlayers, this, boardState.blocks, boardState.trees);
-
-            game = new Game(this, players, board);
-            game.nextTurn();
-            game.startTurnLoop();
         });
-
-
         button3.addActionListener(e -> {
-            game.stopTurnLoop();
             System.exit(0);
         });
 
@@ -164,26 +130,22 @@ public class GUI extends JFrame{
 
         singleButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 1;
-            board = new Board(numberOfPlayers,this,blocks,trees);
-            board.newBoard();
+            board = new Board(numberOfPlayers,this);
             GameControl();
         });
         doubleButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 2;
-            board = new Board(numberOfPlayers,this,blocks,trees);
-            board.newBoard();
+            board = new Board(numberOfPlayers,this);
             GameControl();
         });
         threeButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 3;
-            board = new Board(numberOfPlayers,this,blocks,trees);
-            board.newBoard();
+            board = new Board(numberOfPlayers,this);
             GameControl();
         });
         fourthButton.addActionListener(actionPerformed -> {
             numberOfPlayers = 4;
-            board = new Board(numberOfPlayers,this,blocks,trees);
-            board.newBoard();
+            board = new Board(numberOfPlayers,this);
             GameControl();
         });
         backButton.addActionListener(actionPerformed -> {
@@ -228,17 +190,12 @@ public class GUI extends JFrame{
         mainPanel.add(okButton,gbc);
 
         currentPanel.add(mainPanel, BorderLayout.CENTER);
-        db.deletePlayerTable();
-        db.deleteBoardTable();
-        game.stopTurnLoop();
-        //System.exit(0);
-
         revalidate();
         repaint();
     }
 
 
-    public void ShowGameBoardWindow(Player player, Board boardN) {
+    public void ShowGameBoardWindow(Player player){
         currentPanel.removeAll();
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -340,15 +297,15 @@ public class GUI extends JFrame{
         mainPanel.add(board, BorderLayout.CENTER);
         mainPanel.add(ButtonPanel, BorderLayout.SOUTH);
 
-        for (int i = 0; i < boardN.buttons.length; i++) {
-            for (int j = 0; j < boardN.buttons[i].length; j++) {
+        for (int i = 0; i < board.buttons.length; i++) {
+            for (int j = 0; j < board.buttons[i].length; j++) {
                 final int row = i;
                 final int col = j;
 
-                for (ActionListener al : boardN.buttons[i][j].getActionListeners()) {
-                    boardN.buttons[i][j].removeActionListener(al);
+                for (ActionListener al : board.buttons[i][j].getActionListeners()) {
+                    board.buttons[i][j].removeActionListener(al);
                 }
-                boardN.buttons[i][j].addActionListener(e -> {
+                board.buttons[i][j].addActionListener(e -> {
                     if(player.getHasStructure(row,col)){
                         int toLevel = player.getStructureOnBoard(row,col).getLevel() + 1;
                         int result = JOptionPane.showConfirmDialog(
@@ -359,25 +316,25 @@ public class GUI extends JFrame{
                         );
 
                         if (result == JOptionPane.YES_OPTION) {
-                           if(player.getStructureOnBoard(row,col).levelUp(player)){
-                               if(player.getStructureOnBoard(row,col)instanceof Farm){
-                                   JOptionPane.showMessageDialog(this, "Your structure has been level up! You have level "+player.getStructureOnBoard(row,col).getLevel()+"!\nHP increased by 5\nGiven Food increased by 5!");
-                               }
-                               else if(player.getStructureOnBoard(row,col)instanceof Market){
-                                   JOptionPane.showMessageDialog(this, "Your structure has been level up! You have level "+player.getStructureOnBoard(row,col).getLevel()+"!\nHP increased by 5\nGiven Gold increased by 5!");
-                               }
-                               else{
-                                   JOptionPane.showMessageDialog(this, "Your structure has been level up! You have level "+player.getStructureOnBoard(row,col).getLevel()+"!");
-                               }
-                               updateGoldLabel(player);
-                           }
-                           else{
-                               JOptionPane.showMessageDialog(this, "You Dont Have Enough Money or you have reached the max of level up!");
-                           }
+                            if(player.getStructureOnBoard(row,col).levelUp(player)){
+                                if(player.getStructureOnBoard(row,col)instanceof Farm){
+                                    JOptionPane.showMessageDialog(this, "Your structure has been level up! You have level "+player.getStructureOnBoard(row,col).getLevel()+"!\nHP increased by 5\nGiven Food increased by 5!");
+                                }
+                                else if(player.getStructureOnBoard(row,col)instanceof Market){
+                                    JOptionPane.showMessageDialog(this, "Your structure has been level up! You have level "+player.getStructureOnBoard(row,col).getLevel()+"!\nHP increased by 5\nGiven Gold increased by 5!");
+                                }
+                                else{
+                                    JOptionPane.showMessageDialog(this, "Your structure has been level up! You have level "+player.getStructureOnBoard(row,col).getLevel()+"!");
+                                }
+                                updateGoldLabel(player);
+                            }
+                            else{
+                                JOptionPane.showMessageDialog(this, "You Dont Have Enough Money or you have reached the max of level up!");
+                            }
                         }
 
                     }else if (isMovingUnit) {
-                        if (boardN.moveUnit(player, players, selectedRow, selectedCol, row, col , selectedUnit)) {
+                        if (board.moveUnit(player, players, selectedRow, selectedCol, row, col , selectedUnit)) {
                             updateGoldLabel(player);
                             lossGoldAndFood(player);
                         }
@@ -417,8 +374,7 @@ public class GUI extends JFrame{
         });
 
         currentPanel.add(mainPanel, BorderLayout.CENTER);
-        db.updatePlayer(player.getTurn(),player.getFoodSupply(),player.getGold(),player.getStructures(),player.getUnits(),player.getBlocks(),player.getTrees(),player.getName());
-        db.insertOrUpdateBoardState(blocks,trees);
+
         revalidate();
         repaint();
     }
@@ -474,10 +430,6 @@ public class GUI extends JFrame{
 
     public void GameControl(){
         players.clear();
-
-        db.createPlayerTable();
-        db.createBoardTable();
-
         for (int i = 0; i < numberOfPlayers; i++) {
             String name = JOptionPane.showInputDialog(this, "Enter name for Player " + (i + 1) + ":");
             if (name == null) {
@@ -496,10 +448,7 @@ public class GUI extends JFrame{
                 JOptionPane.showMessageDialog(this, "Please enter a valid name!", "Error", JOptionPane.ERROR_MESSAGE);
                 i--;
             } else {
-                Player player = new Player(name.trim(),i);
-                players.add(player);
-                db.insertPlayer(player , i);
-                db.insertOrUpdateBoardState(blocks, trees);
+                players.add(new Player(name.trim()));
             }
         }
 
@@ -507,83 +456,46 @@ public class GUI extends JFrame{
         switch (numberOfPlayers) {
             case 1, 2:
                 TownHall townHall1 = new TownHall();
-                EmptyBlock emptyBlock1 = new EmptyBlock();
-                emptyBlock1.setColumn(1);
-                emptyBlock1.setRow(10);
                 players.get(0).setStructureAt(10,1,townHall1);
                 players.get(0).setIJ(10,1);
-                players.get(0).setBlockOnArray(emptyBlock1);
                 TownHall townHall2 = new TownHall();
-                EmptyBlock emptyBlock2 = new EmptyBlock();
-                emptyBlock2.setColumn(10);
-                emptyBlock2.setRow(1);
                 players.get(1).setStructureAt(1,10,townHall2);
                 players.get(1).setIJ(1,10);
-                players.get(1).setBlockOnArray(emptyBlock2);
                 break;
 
             case 3:
                 TownHall townHall01 = new TownHall();
-                EmptyBlock emptyBlock01 = new EmptyBlock();
-                emptyBlock01.setColumn(1);
-                emptyBlock01.setRow(10);
                 players.get(0).setStructureAt(10,1,townHall01);
                 players.get(0).setIJ(10,1);
-                players.get(0).setBlockOnArray(emptyBlock01);
                 TownHall townHall02 = new TownHall();
-                EmptyBlock emptyBlock02 = new EmptyBlock();
-                emptyBlock02.setColumn(10);
-                emptyBlock02.setRow(1);
                 players.get(1).setStructureAt(1,10,townHall02);
                 players.get(1).setIJ(1,10);
-                players.get(1).setBlockOnArray(emptyBlock02);
                 TownHall townHall03 = new TownHall();
-                EmptyBlock emptyBlock03 = new EmptyBlock();
-                emptyBlock03.setColumn(10);
-                emptyBlock03.setRow(10);
                 players.get(2).setStructureAt(10,10,townHall03);
                 players.get(2).setIJ(10,10);
-                players.get(2).setBlockOnArray(emptyBlock03);
                 break;
 
             case 4:
                 TownHall townHall001 = new TownHall();
-                EmptyBlock emptyBlock001 = new EmptyBlock();
-                emptyBlock001.setColumn(1);
-                emptyBlock001.setRow(10);
                 players.get(0).setStructureAt(10,1,townHall001);
                 players.get(0).setIJ(10,1);
-                players.get(0).setBlockOnArray(emptyBlock001);
                 TownHall townHall002 = new TownHall();
-                EmptyBlock emptyBlock002 = new EmptyBlock();
-                emptyBlock002.setColumn(10);
-                emptyBlock002.setRow(1);
                 players.get(1).setStructureAt(1,10,townHall002);
                 players.get(1).setIJ(1,10);
-                players.get(1).setBlockOnArray(emptyBlock002);
                 TownHall townHall003 = new TownHall();
-                EmptyBlock emptyBlock003 = new EmptyBlock();
-                emptyBlock003.setColumn(10);
-                emptyBlock003.setRow(10);
                 players.get(2).setStructureAt(10,10,townHall003);
                 players.get(2).setIJ(10,10);
-                players.get(2).setBlockOnArray(emptyBlock003);
                 TownHall townHall004 = new TownHall();
-                EmptyBlock emptyBlock004 = new EmptyBlock();
-                emptyBlock004.setColumn(1);
-                emptyBlock004.setRow(1);
                 players.get(3).setStructureAt(1,1,townHall004);
                 players.get(3).setIJ(1,1);
-                players.get(3).setBlockOnArray(emptyBlock004);
                 break;
 
             default:
                 break;
         }
 
-        game = new Game(this, players, board);
+        game = new Game(this, players);
         game.startTurnLoop();
-
     }
     public void updateResourceLabels(Player player) {
         updateGoldLabel(player);
