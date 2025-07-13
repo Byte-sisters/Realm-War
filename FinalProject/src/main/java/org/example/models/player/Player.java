@@ -28,7 +28,7 @@ public class Player {
     private boolean[][] placeUnit;
     private boolean[][] owns;
 
-    public Player(String name) {
+    public Player(String name,int food,int gold) {
         peasants = new ArrayList<>();
         knights = new ArrayList<>();
         spearmen = new ArrayList<>();
@@ -46,8 +46,8 @@ public class Player {
         owns = new boolean[12][12];
         this.name = name;
         this.townHall = new TownHall();
-        this.gold = 10;
-        this.foodSupply = 10;
+        this.gold = gold;
+        this.foodSupply = food;
         this.i=0;
         this.j=0;
     }

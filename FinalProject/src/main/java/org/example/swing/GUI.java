@@ -1,5 +1,6 @@
 package org.example.swing;
 
+import org.example.DataBase.DB;
 import org.example.controller.Game;
 import org.example.models.Board;
 import org.example.models.player.Player;
@@ -9,10 +10,11 @@ import org.example.models.units.Knight;
 import org.example.models.units.Swordman;
 
 import javax.swing.*;
-import javax.swing.text.TextAction;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
+
 
 public class GUI extends JFrame{
     private JPanel currentPanel;
@@ -31,9 +33,11 @@ public class GUI extends JFrame{
     private boolean isMovingUnit = false;
     private Timer countdownTimer;
     private int timeLeft;
+    private DB db;
 
 
     public GUI() {
+        this.db = new DB();
         setTitle("RealM War");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 500);
@@ -61,7 +65,7 @@ public class GUI extends JFrame{
 
         JButton button1 = new JButton("New Game");
         button1.setPreferredSize(new Dimension(200, 30));
-        JButton button2 = new JButton("Continue");
+        JButton button2 = new JButton("Previous Game Results");
         button2.setPreferredSize(new Dimension(200, 30));
         JButton button3 = new JButton("Exit");
         button3.setPreferredSize(new Dimension(200, 30));
@@ -77,10 +81,11 @@ public class GUI extends JFrame{
         panel.add(button3,gbc);
 
         button1.addActionListener(e -> {
+            db.createTable();
             ShowNewGame();
         });
         button2.addActionListener(e -> {
-
+        showGameHistory();
         });
         button3.addActionListener(e -> {
             System.exit(0);
@@ -181,13 +186,19 @@ public class GUI extends JFrame{
         }
 
         gbc.gridx = 0;
-        gbc.gridy = winners.size()+1;
-        JButton okButton = new JButton("OK");
-        okButton.setPreferredSize(new Dimension(80, 40));
-        okButton.setBackground(Color.pink);
-        okButton.setForeground(Color.BLACK);
-        okButton.addActionListener(e -> System.exit(0));
-        mainPanel.add(okButton,gbc);
+        gbc.gridy = winners.size()+5;
+        JButton ExitButton = new JButton("EXIT");
+        ExitButton.setPreferredSize(new Dimension(150, 30));
+        ExitButton.addActionListener(e -> System.exit(0));
+        mainPanel.add(ExitButton,gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = winners.size()+6;
+        JButton NewGameButton = new JButton("Back to Main Menu");
+        NewGameButton.setPreferredSize(new Dimension(150, 30));
+        NewGameButton.addActionListener(e -> ShowMainMenu());
+        mainPanel.add(NewGameButton,gbc);
+
 
         currentPanel.add(mainPanel, BorderLayout.CENTER);
         revalidate();
@@ -448,7 +459,7 @@ public class GUI extends JFrame{
                 JOptionPane.showMessageDialog(this, "Please enter a valid name!", "Error", JOptionPane.ERROR_MESSAGE);
                 i--;
             } else {
-                players.add(new Player(name.trim()));
+                players.add(new Player(name.trim(),10,10));
             }
         }
 
@@ -494,7 +505,7 @@ public class GUI extends JFrame{
                 break;
         }
 
-        game = new Game(this, players);
+        game = new Game(this, players,db);
         game.startTurnLoop();
     }
     public void updateResourceLabels(Player player) {
@@ -521,5 +532,94 @@ public class GUI extends JFrame{
 
         countdownTimer.start();
     }
+
+   public void showGameHistory() {
+       currentPanel.removeAll();
+
+       JPanel mainPanel = new JPanel(new GridBagLayout());
+       GridBagConstraints gbc = new GridBagConstraints();
+       gbc.insets = new Insets(5, 5, 5, 5);
+       gbc.gridx = 0;
+       gbc.fill = GridBagConstraints.HORIZONTAL;
+       gbc.weightx = 1.0;
+
+       JLabel label = new JLabel("All Previous Game Results:");
+       label.setPreferredSize(new Dimension(200, 30));
+       gbc.gridy = 0;
+       mainPanel.add(label, gbc);
+
+       List<List<Player>> allGames = db.getAllGameResults();
+
+       if (allGames == null || allGames.isEmpty()) {
+           JOptionPane.showMessageDialog(this, "No previous games found!", "Error", JOptionPane.ERROR_MESSAGE);
+           ShowMainMenu();
+           return;
+       }
+
+       JPanel allGamesPanel = new JPanel();
+       allGamesPanel.setLayout(new BoxLayout(allGamesPanel, BoxLayout.Y_AXIS));
+
+       int gameNumber = 1;
+       for (List<Player> gameWinners : allGames) {
+           JLabel gameLabel = new JLabel("Game #" + gameNumber);
+           gameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+           allGamesPanel.add(gameLabel);
+
+           String[] columnNames = {"Name", "Food", "Gold"};
+           Object[][] data = new Object[gameWinners.size()][3];
+           for (int i = 0; i < gameWinners.size(); i++) {
+               Player p = gameWinners.get(gameWinners.size() - i - 1);
+               data[i][0] = p.getName();
+               data[i][1] = p.getFoodSupply();
+               data[i][2] = p.getGold();
+           }
+
+           JTable table = new JTable(data, columnNames);
+           JScrollPane scrollPane = new JScrollPane(table);
+           scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+           scrollPane.setPreferredSize(new Dimension(450, 100));
+
+           allGamesPanel.add(scrollPane);
+
+           allGamesPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+           gameNumber++;
+       }
+
+       JScrollPane mainScrollPane = new JScrollPane(allGamesPanel);
+       mainScrollPane.setPreferredSize(new Dimension(480, 350));
+
+       gbc.gridy = 1;
+       gbc.fill = GridBagConstraints.BOTH;
+       gbc.weighty = 1.0;
+       mainPanel.add(mainScrollPane, gbc);
+
+       JButton backButton = new JButton("Back");
+       backButton.setPreferredSize(new Dimension(100, 30));
+       backButton.addActionListener(e -> ShowMainMenu());
+
+       gbc.gridy = 2;
+       gbc.fill = GridBagConstraints.NONE;
+       gbc.weighty = 0;
+       mainPanel.add(backButton, gbc);
+
+       JButton removeHistoryButton = new JButton("Delete History");
+       removeHistoryButton.setPreferredSize(new Dimension(100, 30));
+       removeHistoryButton.addActionListener(e -> {
+           db.dropTable();
+           JOptionPane.showMessageDialog(this, "History deleted!", "Success", JOptionPane.INFORMATION_MESSAGE);
+           ShowMainMenu();
+       });
+       gbc.gridy = 3;
+       gbc.fill = GridBagConstraints.NONE;
+       gbc.weighty = 0;
+       mainPanel.add(removeHistoryButton, gbc);
+
+       currentPanel.add(mainPanel);
+       currentPanel.revalidate();
+       currentPanel.repaint();
+   }
+
+
 
 }
