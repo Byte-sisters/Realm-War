@@ -1,5 +1,8 @@
 package org.example.DataBase;
 import org.example.models.player.Player;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,10 +33,10 @@ public class DB {
 
             stmt.execute(createGamesTable);
             stmt.execute(createWinnersTable);
-            System.out.println("Tables created successfully.");
+            logAction("Tables 'games' and 'winners' created successfully.");
 
         } catch (SQLException e) {
-            System.err.println("Error creating tables: " + e.getMessage());
+            logAction("Failed to create table: " + e.getMessage());
         }
     }
 
@@ -65,10 +68,11 @@ public class DB {
             }
 
             conn.commit();
+            logAction("Game saved successfully with " + winners.size() + " winners.");
             return gameId;
 
         } catch (SQLException e) {
-            System.err.println("Error saving game winners: " + e.getMessage());
+            logAction("Failed to save game winners: " + e.getMessage());
             return -1;
         }
     }
@@ -122,10 +126,19 @@ public class DB {
 
             stmt.executeUpdate(sqlWinners);
             stmt.executeUpdate(sqlGames);
-            System.out.println("Tables 'winners' and 'games' dropped successfully.");
+            logAction("Tables 'games' and 'winners' dropped successfully.");
 
         } catch (SQLException e) {
-            System.err.println("Error dropping tables: " + e.getMessage());
+            logAction("Error dropping tables: " + e.getMessage());
         }
     }
+
+    private void logAction(String message) {
+        try (FileWriter fw = new FileWriter("src/main/java/org/example/DataBase/Log.txt", true)) {
+            fw.write("[" + new Timestamp(System.currentTimeMillis()) + "] " + message + "\n");
+        } catch (IOException e) {
+            System.err.println("error in writing log: " + e.getMessage());
+        }
+    }
+
 }

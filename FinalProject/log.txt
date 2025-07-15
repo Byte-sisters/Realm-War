@@ -1,0 +1,2 @@
+[2025-07-15 14:58:53.729] Tables 'games' and 'winners' created successfully.
+[2025-07-15 15:00:35.699] Game saved successfully with 2 winners.
