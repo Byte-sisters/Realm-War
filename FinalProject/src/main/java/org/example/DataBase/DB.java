@@ -12,7 +12,7 @@ import java.util.Map;
 public class DB {
     private static final String URL = "jdbc:postgresql://localhost:5432/RealMwar";
     private static final String USER = "postgres";
-    private static final String PASS = "RAyasana_Ziba#1379";
+    private static final String PASS = "";
 
     public void createTable() {
         String createGamesTable = "CREATE TABLE IF NOT EXISTS games (" +

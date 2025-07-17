@@ -331,6 +331,10 @@ public class Board extends JPanel {
             JOptionPane.showMessageDialog(this, "You can't move a unit here!", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+        if (player.isThereTownHall(toRow, toCol)) {
+            JOptionPane.showMessageDialog(this, "You can't move a unit here!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         if(!player.getOwns(fromRow,fromCol)){
             JOptionPane.showMessageDialog(this, "You can only move your own units!", "Error", JOptionPane.ERROR_MESSAGE);
             return false;

@@ -64,6 +64,10 @@ public class Player {
         return j;
     }
 
+    public boolean isThereTownHall(int i, int j) {
+        return i == getI() && j == getJ();
+    }
+
     public void changeGoldPairTurn(){
         if(!markets.isEmpty()) {
             for(Market market : markets){
